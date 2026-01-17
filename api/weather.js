@@ -34,9 +34,10 @@ app.get('/fetch_weather', async (req, res) => {
 });
 
 app.get('/get_locality', async (req, res) => {
-  const coords = {};
+  const coords = {longitude: '', latitude: ''};
   if (req.query.latitude && req.query.longitude) {
-    coords = {longitude: req.query.longitude, latitude: req.query.latitude};
+    coords.latitude = req.query.longitude;
+    coords.longitude = req.query.latitude;
   } else {
     throw new Error ("Can't get location based on coordinates");
   }
@@ -44,18 +45,24 @@ app.get('/get_locality', async (req, res) => {
     const location = await getLocation(coords);
     if (location.ok) {
       res.json({
-        location: location.name
+        message: "success!",
+        locality: location.locality,
+        countryName: location.countryName
       })
     } else {
       res.json({
-        location: null
+        message: "failed",
+        locality: null,
+        countryName: null,
       })
     }
   }
   catch (error) {
     console.log(error);
     res.json({
-      location: null
+      locality: null,
+      message: 'API failure',
+      countryName: null
     })
   }
 })
