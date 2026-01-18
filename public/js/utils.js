@@ -60,6 +60,18 @@ function toCelsius(value) {
 function MiToKm(value) {
   return (value * 1.60934).toFixed(1);
 }
+
+function getMoonphaseString(phase) {
+  if (phase === 0 || phase === 1) return "New Moon";
+  if (phase === 0.25) return "First Quarter";
+  if (phase === 0.5) return "Full Moon";
+  if (phase === 0.75) return "Last Quarter";
+  if (phase > 0 && phase < 0.25) return "Waxing Crescent";
+  if (phase > 0.25 && phase < 0.5) return "Waxing Gibbous";
+  if (phase > 0.5 && phase < 0.75) return "Waning Gibbous";
+  if (phase > 0.75 && phase < 1) return "Waning Crescent";
+  return "Unknown";
+}
 // Reference Directions
 
 // 337.5° - 22.5°	North (N)
@@ -134,4 +146,14 @@ function createWindDescription(windspeed, winddir) {
 
   return `A ${match.adj} wind from the ${windDirection}; ${match.advice}`;
 }
-export {currentLocation, units, weather, toCelsius,MiToKm, createWindDescription, findWindDirection};
+
+export {
+  currentLocation, 
+  units, 
+  weather, 
+  toCelsius,
+  MiToKm, 
+  createWindDescription, 
+  findWindDirection, 
+  getMoonphaseString
+};
