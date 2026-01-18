@@ -1,6 +1,6 @@
 import getGeoLocation from "./get_geolocation.js";
 import { currentLocation, weather } from "./utils.js";
-import { renderToday } from "./renderDay.js";
+import { renderRoot } from "./renderRoot.js";
 
 async function fetchWeather (locality) {
   try {
@@ -11,7 +11,7 @@ async function fetchWeather (locality) {
       const raw = await response.json();
       const data = raw.data;
       weather.setWeather(data);
-      renderToday(weather.current, weather.today);
+      renderRoot('today', weather);
     }
   } catch (error) {
     console.error (error.message);
