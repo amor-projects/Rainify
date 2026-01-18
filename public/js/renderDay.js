@@ -3,6 +3,147 @@ import { units, toCelsius, MiToKm, createWindDescription, findWindDirection } fr
 
 const main = document.querySelector('#main');
 
+function renderTempAndDescription(temp, description){
+  const parent = document.getElementById('temp-and-description')
+  if (units.temp == '°C') {
+    temp = toCelsius(temp);
+  }
+  const tempElement = createElement(temp, 'value xl bold');
+  const descriptionElement = createElement(description, 'description bold large');
+  if (!parent) {
+    const tempAndDescription = createContainer('temp-and-description', 'flex-column card', tempElement, descriptionElement);
+    main.append(tempAndDescription);
+    return 1;
+  }
+  parent.replaceChildren();
+  parent.append(tempElement, descriptionElement);
+  return 0;
+}
+
+function renderLowHighFeels(low, high, feels){
+  const parent = document.getElementById('low-high-feels');
+  if (units.temp == '°C') {
+    low = toCelsius(low);
+    high = toCelsius(high);
+    feels = toCelsius(feels);
+  }
+  low += units.temp;
+  high += units.temp;
+  feels += units.temp;
+  const lowElem = createLabeledElement('low-container', 'Low', low);
+  const highElem = createLabeledElement('high-container', 'High', high);
+  const feelsElem = createLabeledElement('feels-container', 'Feels', feels);
+  
+  if (!parent) {
+    const lowHighFeels = createContainer('low-high-feels', 'flex-column card', lowElem, highElem, feelsElem);
+    main.appendChild(lowHighFeels);
+    return 1;
+  }
+  parent.replaceChildren();
+  parent.append(lowElem, highElem, feelsElem);
+  return 0;
+}
+
+function renderDewHumidityPressure(dew, humidity, pressure){
+  const parent = document.getElementById('dew-humidity-pressure');
+  
+  if (units.temp == '°C') {
+    dew = toCelsius(dew);
+  };
+  dew += units.dew;
+  humidity += '%';
+  pressure += ` ${units.pressure}`;
+
+  const dewElem = createLabeledElement('dew-container', 'Dew', dew);
+  const humidityElem = createLabeledElement('humidity-container', 'Humidity', humidity);
+  const pressureElem = createLabeledElement('pressure-container', 'Pressure', pressure);
+
+  if (!parent) {
+    const dewHumidityPressure = createContainer('dew-humidity-pressure', 'flex-column card', dewElem, humidityElem, pressureElem);
+    main.appendChild(dewHumidityPressure);
+    return 1;
+  }
+  parent.replaceChildren();
+  parent.append(dewElem, humidityElem, pressureElem);
+  return 0;
+}
+
+function renderVisibilityUvCloudCover(visibility, uvindex, cloudCover){
+  const parent = document.getElementById('visibility-uv-cloud');
+  if (units.visibility == 'Km') {
+    visibility = MiToKm(visibility);
+  }
+  
+  visibility +=` ${units.visibility}`;
+  cloudCover += '%';
+
+  const visibilityElem = createLabeledElement('visibility-container', 'Visibility', visibility);
+  const cloudCoverElem = createLabeledElement('cloud-cover-container', 'Cloud Cover', cloudCover);
+  const uvindexElem = createLabeledElement('uvindex-container', 'UV Index', uvindex);
+
+  if (!parent) {
+    const visibilityUvCloud = createContainer('visibility-uv-cloud', 'flex-column card', visibilityElem, cloudCoverElem, uvindexElem);
+    main.appendChild(visibilityUvCloud);
+    return 1;
+  }
+  parent.replaceChildren();
+  parent.append(visibilityElem, cloudCoverElem, uvindexElem);
+  return 0;
+}
+
+function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir){
+  const parent = document.getElementById('wind-status');
+  const windspeed = currentWindspeed || todayWindspeed;
+  let winddir = currentWinddir || todayWinddir;
+  if (units.speed == 'Km/h') {
+    windspeedWithUnits = MiToKm (windspeed);
+  }
+  const windspeedWithUnits = `${windspeed} ${units.speed}`;
+  winddir = findWindDirection(winddir);
+  const windspeedElem = createElement(windspeedWithUnits, 'wind-speed bold large');
+  const winddirElem = createElement(winddir, 'winddir bold');
+  const windDescription = createWindDescription(windspeed, winddir);
+  const windDescriptionElem = createElement(windDescription, 'wind-description');
+  const wind = createContainer('wind-container', 'flex-row', windspeedElem, winddirElem);
+
+  if (!parent) {
+    const windStatus = createContainer('wind-status', 'flex-column card', wind, windDescriptionElem);
+    main.append(windStatus);
+    return 1;
+  }
+  parent.replaceChildren();
+  parent.append(wind, windDescriptionElem);
+}
+
+function renderNextHours(hours, currentTime){
+  const parent = document.getElementById('next-hours');
+  const currentHour = Number(currentTime.slice(0, 2));
+  const upcomingHours = [];
+  const upcomingHoursDom = [];
+  for (const hour of hours) {
+    const time = Number(hour.datetime.slice(0, 2));
+    if (time > currentHour) {
+      upcomingHours.push(hour);
+    }
+  }
+  const length = upcomingHours.length;
+  if (length > 7) {
+    upcomingHours.splice(7);
+  }
+  if (!parent) {
+    for (const hour of upcomingHours) {
+      const hourElem = createAnHour(hour);
+      upcomingHoursDom.push(hourElem);
+    }
+    const nextHours = createContainer('next-hours', 'flex-row', ...upcomingHoursDom);
+    main.appendChild(nextHours);
+    return 1;
+  }
+  parent.replaceChildren();
+  parent.append(...upcomingHoursDom);
+  return 0;
+}
+
 function renderToday (current, today) {
   const main = document.querySelector('#main');
   main.replaceChildren();
