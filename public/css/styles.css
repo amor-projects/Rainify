@@ -1,0 +1,46 @@
+body {
+  background-color: peachpuff;
+  font-size: calc((0.9rem + 1vw) / 2);
+}
+#root {
+  height: fit-content;
+  margin: 2rem 2rem;
+  background-color: whitesmoke;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+.card {
+  background-color: rgb(240, 255, 255);
+  border-radius: 1rem;
+  padding: 0.5rem;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.bold {
+  font-weight: 800;
+}
+
+.large {
+  font-size: calc((1.8rem + 1.5vw) / 2);
+}
+.xl {
+  font-size: calc((2.5rem + 2vw) / 2);
+  font-weight: 900;
+}
+.nav-btn {
+  font: inherit;
+  background-color: inherit;
+  border: none;
+  border-radius: 1rem;
+  width: fit-content;
+  padding: 0.5rem 1rem;
+}
