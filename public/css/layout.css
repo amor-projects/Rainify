@@ -1,0 +1,34 @@
+#root {
+  display: grid;
+  grid-template: repeat(8, 1fr) / repeat(10, 1fr);
+  gap: 1rem;
+}
+
+#main {
+  grid-area: 2/2/9/9;
+  display: grid;
+  grid-template: repeat(4, 1fr) / repeat(7, 1fr);
+  gap: 1rem;
+}
+
+#temp-and-description {
+  grid-area: 1/1/3/4;
+}
+
+#low-high-feels {
+  grid-area: 1/4/2/6;
+}
+
+#dew-humidity-pressure {
+  grid-area: 1/6/2/8;
+}
+
+#visibility-uv-cloud {
+  grid-area: 2/6/3/8;
+}
+#wind-status {
+  grid-area: 2/4/3/6;
+}
+#next-hours {
+  grid-area: 3/1/6/8;
+}
