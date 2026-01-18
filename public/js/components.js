@@ -24,7 +24,7 @@ function createLabeledElement(id, label, value) {
   return container;
 }
 function createAnHour (hour) {
-  const time = hour.datetime.slice(0, 2);
+  const time = hour.datetime.slice(0, 5);
   let temp = hour.temp;
   if (units.temp == '°C') {
     temp = toCelsius(temp);
@@ -44,7 +44,7 @@ function createAnHour (hour) {
 
   const hourContainer  = createContainer( 
     `${time}-hour`, 
-    'flex-column gap1rem card', 
+    'flex-column card', 
     timeElem, 
     tempElem, 
     cloudCoverElem, 
@@ -53,4 +53,19 @@ function createAnHour (hour) {
   );
   return hourContainer;
 }
-export {createContainer, createElement, createLabeledElement, createAnHour};
+function createButton(text, id,classNames, handleClick) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = classNames;
+  btn.id = id;
+  btn.textContent = text;
+  btn.onclick= (event) => handleClick(event.target);
+  return btn;
+}
+export {
+  createContainer, 
+  createElement, 
+  createLabeledElement, 
+  createAnHour, 
+  createButton
+};
