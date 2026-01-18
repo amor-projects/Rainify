@@ -118,17 +118,19 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
 function renderNextHours(hours, currentTime){
   const parent = document.getElementById('next-hours');
   const currentHour = Number(currentTime.slice(0, 2));
-  const upcomingHours = [];
   const upcomingHoursDom = [];
+  let upcomingHours = [];
   for (const hour of hours) {
     const time = Number(hour.datetime.slice(0, 2));
-    if (time > currentHour) {
+    if (time >= currentHour) {
       upcomingHours.push(hour);
     }
   }
   const length = upcomingHours.length;
   if (length > 7) {
-    upcomingHours.splice(7);
+    upcomingHours.splice(7,);
+  } else  {
+    upcomingHours = hours.slice(17, 24);
   }
   if (!parent) {
     for (const hour of upcomingHours) {
@@ -163,14 +165,16 @@ function renderToday (current, today) {
   const todayWindspeed = today.windspeed;
   const todayWinddir = today.winddir;
   const hours = today.hours;
-  const currentTime = current.datetime;
+  const date = new Date();
+  let currentHour = date.getHours();
+  if (currentHour < 10) currentHour = `0${currentHour}`;
   // DOM Elements
   renderTempAndDescription(temp, description);
   renderLowHighFeels(low, high, feels);
   renderDewHumidityPressure(dew, humidity, pressure);
   renderVisibilityUvCloudCover(visibility, uvindex, cloudCover);
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir);
-  renderNextHours(hours, currentTime);
+  renderNextHours(hours, currentHour);
 }
 
 export {renderToday};
