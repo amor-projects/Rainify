@@ -1,5 +1,5 @@
 import getGeoLocation from "./get_geolocation.js";
-import { currentLocation } from "./utils.js";
+import { currentLocation, weather } from "./utils.js";
 import { renderToday } from "./renderDay.js";
 
 async function fetchWeather (locality) {
@@ -8,15 +8,16 @@ async function fetchWeather (locality) {
     if (!response.ok) {
       throw new Error (`Failed! due to ${response.message}`);
     } else {
-      const data = await response.json();
-      const weather = data.data;
-      renderToday(weather);
+      const raw = await response.json();
+      const data = raw.data;
+      weather.setWeather(data);
+      renderToday(weather.current, weather.today);
     }
   } catch (error) {
     console.error (error.message);
   }
 };
-const loading = true;
+let loading = true;
 while (loading) {
   if (getGeoLocation()) {
     fetchWeather(currentLocation.locality);
