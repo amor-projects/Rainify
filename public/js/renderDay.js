@@ -149,6 +149,7 @@ function renderDay (type, current, today = null)  {
   if (today === null) today = current;
   const main = document.querySelector('#main');
   main.replaceChildren();
+  main.classList.remove('days-view');
   const temp = current.temp;
   const description = today.description;
   const low = today.tempmin;

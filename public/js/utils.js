@@ -5,7 +5,7 @@ const weather = {
     this._current = data.currentConditions || '';
     this._today = data.days[0] || '';
     this._tomorrow = data.days[1] || '';
-    this._next12Days = data.days.slice(2, 13) || '';
+    this._next12Days = data.days.slice(2, 14) || '';
     this._location = {city: currentLocation.city, country: currentLocation.countryName} || {city: '', country: ''};
   },
   get current() {

@@ -1,5 +1,6 @@
 import { createButton, createContainer, createElement, createLabeledElement } from "./components.js";
 import { renderDay } from "./renderDay.js";
+import { renderNext12Days } from "./renderNext12Days.js";
 import { currentLocation, getMoonphaseString, weather } from "./utils.js";
 import {fetchWeather} from "./main.js";
 
@@ -8,9 +9,9 @@ const header = document.querySelector('#header');
 function handleNavBtn(btn) {
   if (btn.id == 'today-tab') {
     renderRoot('today', weather);
-  } else if (btn.id = 'tomorrow-tab') {
+  } else if (btn.id == 'tomorrow-tab') {
     renderRoot('tomorrow', weather);
-  } else if (btn.id = 'next-12-days-tab') {
+  } else if (btn.id == 'next-12-days') {
     renderRoot('next12Days', weather)
   }
 }
@@ -133,7 +134,7 @@ function renderLunarClanendar(moonphase){
 function renderTabs(){
   const todayTab = createButton('Today', 'today-tab', 'nav-btn', handleNavBtn);
   const tomorrowTab = createButton('Tomorrow', 'tomorrow-tab', 'nav-btn', handleNavBtn);
-  const next12DaysTab = createButton('Next 12 Days', 'next-12-days-tab', 'nav-btn', handleNavBtn);
+  const next12DaysTab = createButton('Next 12 Days', 'next-12-days', 'nav-btn', handleNavBtn);
 
   const nav = document.getElementById('nav');
   nav.replaceChildren();
@@ -213,7 +214,7 @@ function renderToggle(){
   }
   
 };
-function renderHeader(){
+function renderHeader(currentLocation){
   // Other Stuff like trace me button
   renderLocation(currentLocation);
   renderSearchBar();
@@ -241,14 +242,14 @@ function renderSideBar(weather) {
 }
 
 function renderRoot(tab, weather) {
-  renderHeader();
+  renderHeader(currentLocation);
   renderTabs(tab);
   renderSideBar(weather);
-  if (tab == 'today') {
+  if (tab === 'today') {
     renderDay('today', weather.current, weather.today);
-  } else if (tab == 'tomorrow') {
+  } else if (tab === 'tomorrow') {
     renderDay('tomorrow', weather.tomorrow);
-  } else if (tab = 'next12Days') {
+  } else if (tab === 'next12Days') {
     renderNext12Days(weather.next12Days);
   } else {
     console.error("Invalid Tab option falling back to Today tab");
