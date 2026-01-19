@@ -101,10 +101,9 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   const windspeedWithUnits = `${windspeed} ${units.speed}`;
   winddir = findWindDirection(winddir);
   const windspeedElem = createElement(windspeedWithUnits, 'wind-speed bold large');
-  const winddirElem = createElement(winddir, 'winddir bold');
   const windDescription = createWindDescription(windspeed, winddir);
   const windDescriptionElem = createElement(windDescription, 'wind-description');
-  const wind = createContainer('wind-container', 'flex-row', windspeedElem, winddirElem);
+  const wind = createContainer('wind-container', 'flex-row', windspeedElem);
 
   if (!parent) {
     const windStatus = createContainer('wind-status', 'flex-column card', wind, windDescriptionElem);
@@ -146,7 +145,8 @@ function renderNextHours(hours, currentTime){
   return 0;
 }
 
-function renderToday (current, today) {
+function renderDay (type, current, today = null)  {
+  if (today === null) today = current;
   const main = document.querySelector('#main');
   main.replaceChildren();
   const temp = current.temp;
@@ -166,15 +166,19 @@ function renderToday (current, today) {
   const todayWinddir = today.winddir;
   const hours = today.hours;
   const date = new Date();
-  let currentHour = date.getHours();
-  if (currentHour < 10) currentHour = `0${currentHour}`;
+  let currentHour = '00'
+  if (type === 'today') {
+    currentHour = date.getHours();
+    if (currentHour < 10) currentHour = `0${currentHour}`;
+  }
+  
   // DOM Elements
   renderTempAndDescription(temp, description);
   renderLowHighFeels(low, high, feels);
   renderDewHumidityPressure(dew, humidity, pressure);
   renderVisibilityUvCloudCover(visibility, uvindex, cloudCover);
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir);
-  renderNextHours(hours, currentHour);
+  renderNextHours(hours, String(currentHour));
 }
 
-export {renderToday};
+export {renderDay};
