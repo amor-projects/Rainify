@@ -36,3 +36,4 @@ if (loading) {
   currentLocation.countryName = "Pakistan";
 }
 
+export {fetchWeather}
