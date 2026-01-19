@@ -23,6 +23,7 @@ body {
 .flex-column {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 .bold {
@@ -30,10 +31,10 @@ body {
 }
 
 .large {
-  font-size: calc((1.8rem + 1.5vw) / 2);
+  font-size: calc((3rem + 1.5vw) / 2);
 }
 .xl {
-  font-size: calc((2.5rem + 2vw) / 2);
+  font-size: calc((3.5rem + 2vw) / 2);
   font-weight: 900;
 }
 .nav-btn {
@@ -43,4 +44,41 @@ body {
   border-radius: 1rem;
   width: fit-content;
   padding: 0.5rem 1rem;
+}
+.fa-map-marker {
+  margin: auto;
+}
+.btn, .search-input {
+  background-color: azure;
+  border: none;
+  font: inherit;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+}
+#search-bar {
+  height: 50%;
+  padding: 2px;
+  gap: 2px;
+  border : 2px solid;
+  border-radius: 1.5rem;
+}
+.search-input {
+  border-radius: 1rem 0rem 0rem 1rem;
+  background-color: inherit;
+}
+.search-btn{
+  border-radius: 0rem 1rem 1rem 0rem;
+}
+.toggle {
+  padding: 0.75rem;
+  height: auto;
+  border-radius: 50%;
+}
+.profile-pic > img {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}
+#temp-and-description {
+  
 }
