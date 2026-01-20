@@ -35,29 +35,42 @@ function renderDateTimeAndSun(date, sunrise, sunset){
   }
 }
 
-function renderRainChart(today, hours, currentTime){
-let upcomingHours = [];
-const currentHour = Number(currentTime.slice(0,2));
-for (const hour of hours) {
-  const time = Number(hour.datetime.slice(0, 2));
-  if (time >= currentHour) {
-    upcomingHours.push(hour);
+function renderRainChart(day, hours, currentTime, tab){
+let upcomingChances = [];
+if (tab === 'next12Days') {
+  upcomingChances = day.slice(2, 9);
+} else {
+  const currentHour = Number(currentTime.slice(0,2));
+  for (const hour of hours) {
+    const time = Number(hour.datetime.slice(0, 2));
+    if (time >= currentHour) {
+      upcomingChances.push(hour);
+    }
   }
 }
-const length = upcomingHours.length;
+const length = upcomingChances.length;
 if (length > 7) {
-  upcomingHours.splice(7);
-} else  {
-  upcomingHours = hours.slice(17, 24);
+  upcomingChances.splice(7);
+} else if (length < 7)  {
+  upcomingChances = hours.slice(17, 24);
 }
 
 const labels = [];
 const dataset = [];
-for (const hour of upcomingHours) {
-  labels.push(hour.datetime.slice(0, 2));
-  const precipProb = hour.precipprob !== null ? hour.precipprob : today.precipprob;
-  dataset.push(precipProb);
+if (tab === 'next12Days') {
+  for (const day of upcomingChances) {
+    labels.push(day.datetime.slice(8));
+    const precipProb = day.precipprob !== null ? day.precipprob : 'UNAVAIL';
+    dataset.push(precipProb);
+  }
+} else {
+  for (const hour of upcomingChances) {
+    labels.push(hour.datetime.slice(0, 2));
+    const precipProb = hour.precipprob !== null ? hour.precipprob : 'UNAVAIL';
+    dataset.push(precipProb);
+  }
 }
+
 const div = document.createElement('div');
 const canva = document.createElement('canvas');
 canva.width = '100%';
@@ -232,19 +245,25 @@ function renderHeader(currentLocation){
   // Other stuff like profile button
 };
 
-function renderSideBar(weather) {
+function renderSideBar(weather, tab) {
   renderDateTimeAndSun(weather.today.datetime, weather.today.sunrise, weather.today.sunset);
   setInterval(()=> {
     renderDateTimeAndSun(weather.today.datetime, weather.today.sunrise, weather.today.sunset);
-  }, 1000)
-  renderRainChart(weather.today, weather.today.hours, weather.current.datetime);
+  }, 1000);
+  if (tab === 'next12Days') {
+      renderRainChart(weather.next12Days, '', '', tab);
+  } else if (tab === 'tomorrow') {
+      renderRainChart(weather.tomorrow, weather.tomorrow.hours, weather.tomorrow.hours[0].datetime, tab);
+  } else {
+      renderRainChart(weather.today, weather.today.hours,weather.current.datetime, tab );
+  }
   renderLunarClanendar(weather.current.moonphase);
 }
 
 function renderRoot(tab, weather) {
   renderHeader(currentLocation);
   renderTabs(tab);
-  renderSideBar(weather);
+  renderSideBar(weather, tab);
   if (tab === 'today') {
     renderDay('today', weather.current, weather.today);
   } else if (tab === 'tomorrow') {
@@ -257,4 +276,4 @@ function renderRoot(tab, weather) {
   }
 }
 
-export {renderRoot};
+export {renderRoot, renderRainChart};

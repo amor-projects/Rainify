@@ -1,5 +1,6 @@
 import { createContainer, createElement } from './components.js';
 import { units } from './utils.js';
+import { renderRainChart } from './renderRoot.js';
 
 function createOneDayCard(day) {
   const date = createElement(day.datetime, 'date-time-day bold');
@@ -30,7 +31,12 @@ function renderNext12Days(days) {
     const oneDay = createOneDayCard(day);
     main.appendChild(oneDay);
   }
-  main.classList.add('days-view')
+  main.classList.add('days-view');
+  const rainChart = document.querySelector('#rain-chart');
+  if (rainChart) {
+    rainChart.remove();
+  };
+  renderRainChart(days, '', '', 'next12Days');
 }
 
 export {renderNext12Days}
