@@ -1,7 +1,7 @@
 import { createButton, createContainer, createElement, createLabeledElement } from "./components.js";
-import { renderDay } from "./renderDay.js";
-import { renderNext12Days } from "./renderNext12Days.js";
-import { currentLocation, getMoonphaseString, weather } from "./utils.js";
+import { renderDay} from "./renderDay.js";
+import { renderNextSixDays } from "./renderNext12Days.js";
+import { currentLocation, getMoonphaseString, weather} from "./utils.js";
 import {fetchWeather} from "./main.js";
 
 const sidbar = document.querySelector('#sidebar');
@@ -11,8 +11,8 @@ function handleNavBtn(btn) {
     renderRoot('today', weather);
   } else if (btn.id == 'tomorrow-tab') {
     renderRoot('tomorrow', weather);
-  } else if (btn.id == 'next-12-days') {
-    renderRoot('next12Days', weather)
+  } else if (btn.id == 'next-6-days') {
+    renderRoot('next6Days', weather)
   }
 }
 
@@ -38,8 +38,8 @@ function renderDateTimeAndSun(date, sunrise, sunset){
 
 function renderRainChart(day, hours, currentTime, tab){
 let upcomingChances = [];
-if (tab === 'next12Days') {
-  upcomingChances = day.slice(2, 9);
+if (tab === 'next6Days') {
+  upcomingChances = day.slice(0, 7);
 } else {
   const currentHour = Number(currentTime.slice(0,2));
   for (const hour of hours) {
@@ -50,15 +50,15 @@ if (tab === 'next12Days') {
   }
 }
 const length = upcomingChances.length;
-if (length > 7) {
+if (length > 7 && tab !== 'next6Days') {
   upcomingChances.splice(7);
-} else if (length < 7)  {
+} else if (length < 7 && tab !== 'next6Days')  {
   upcomingChances = hours.slice(17, 24);
 }
 
 const labels = [];
 const dataset = [];
-if (tab === 'next12Days') {
+if (tab === 'next6Days') {
   for (const day of upcomingChances) {
     labels.push(day.datetime.slice(8));
     const precipProb = day.precipprob !== null ? day.precipprob : 'UNAVAIL';
@@ -148,17 +148,17 @@ function renderLunarClanendar(moonphase){
 function renderTabs(tab){
   const todayTab = createButton('Today', 'today-tab', 'nav-btn', handleNavBtn);
   const tomorrowTab = createButton('Tomorrow', 'tomorrow-tab', 'nav-btn', handleNavBtn);
-  const next12DaysTab = createButton('Next 12 Days', 'next-12-days', 'nav-btn', handleNavBtn);
+  const nextSixDaysTab = createButton('Next 6 Days', 'next-6-days', 'nav-btn', handleNavBtn);
   if (tab === 'tomorrow') {
     tomorrowTab.classList.add('active-tab');
-  } else if (tab === 'next12Days') {
-    next12DaysTab.classList.add('active-tab');
+  } else if (tab === 'next6Days') {
+    nextSixDaysTab.classList.add('active-tab');
   } else {
     todayTab.classList.add('active-tab');
   }
   const nav = document.getElementById('nav');
   nav.replaceChildren();
-  nav.append(todayTab, tomorrowTab, next12DaysTab);
+  nav.append(todayTab, tomorrowTab, nextSixDaysTab);
 }
 
 function renderLocation(currentLocation){
@@ -257,8 +257,8 @@ function renderSideBar(weather, tab) {
   setInterval(()=> {
     renderDateTimeAndSun(weather.today.datetime, weather.today.sunrise, weather.today.sunset);
   }, 1000);
-  if (tab === 'next12Days') {
-      renderRainChart(weather.next12Days, '', '', tab);
+  if (tab === 'next6Days') {
+      renderRainChart(weather.next6Days, '', '', tab);
   } else if (tab === 'tomorrow') {
       renderRainChart(weather.tomorrow, weather.tomorrow.hours, weather.tomorrow.hours[0].datetime, tab);
   } else {
@@ -275,8 +275,8 @@ function renderRoot(tab, weather) {
     renderDay('today', weather.current, weather.today);
   } else if (tab === 'tomorrow') {
     renderDay('tomorrow', weather.tomorrow);
-  } else if (tab === 'next12Days') {
-    renderNext12Days(weather.next12Days);
+  } else if (tab === 'next6Days') {
+    renderNextSixDays(weather.next6Days);
   } else {
     console.error("Invalid Tab option falling back to Today tab");
     renderDay(weather.current, weather.today);

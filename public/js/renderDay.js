@@ -1,22 +1,32 @@
 import { createContainer, createElement, createLabeledElement, createAnHour} from "./components.js";
-import { units, toCelsius, MiToKm, createWindDescription, findWindDirection } from "./utils.js";
+import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, insertWeatherIcon } from "./utils.js";
 
 const main = document.querySelector('#main');
 
+function insertAllHourIcons() {
+  const hourIcons = document.querySelectorAll('.hour-icon');
+  hourIcons.forEach((icon) => {
+    insertWeatherIcon(icon.dataset.icon, icon.id);
+  });
+}
 function renderTempAndDescription(temp, description){
   const parent = document.getElementById('temp-and-description')
   if (units.temp == '°C') {
     temp = toCelsius(temp);
   }
-  const tempElement = createElement(temp, 'value xl bold');
+  const icon = document.createElement('span');
+  icon.id = 'temp-and-desc-icon';
+  icon.classList.add('svg-icon');
+  const tempElement = createElement(temp, 'value');
+  const tempContainer = createContainer('temp-and-icon', 'flex-row xl bold',tempElement, icon);
   const descriptionElement = createElement(description, 'description bold large');
   if (!parent) {
-    const tempAndDescription = createContainer('temp-and-description', 'flex-column card', tempElement, descriptionElement);
+    const tempAndDescription = createContainer('temp-and-description', 'flex-column card', tempContainer, descriptionElement);
     main.append(tempAndDescription);
     return 1;
   }
   parent.replaceChildren();
-  parent.append(tempElement, descriptionElement);
+  parent.append(tempContainer, descriptionElement);
   return 0;
 }
 
@@ -166,6 +176,7 @@ function renderDay (type, current, today = null)  {
   const todayWindspeed = today.windspeed;
   const todayWinddir = today.winddir;
   const hours = today.hours;
+  const icon = current.icon;
   const date = new Date();
   let currentHour = '00'
   if (type === 'today') {
@@ -179,7 +190,11 @@ function renderDay (type, current, today = null)  {
   renderDewHumidityPressure(dew, humidity, pressure);
   renderVisibilityUvCloudCover(visibility, uvindex, cloudCover);
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir);
+  const nextHours = createElement('Next Hours', 'large next-hours-title');
+  main.append(nextHours);
   renderNextHours(hours, String(currentHour));
+  insertWeatherIcon(icon, 'temp-and-desc-icon');
+  insertAllHourIcons();
 }
 
 export {renderDay};

@@ -36,19 +36,33 @@ function createAnHour (hour) {
   if (units.temp == 'Km/h') {
     windspeed = MiToKm(windspeed);
   }
+  const conditionsIcon = document.createElement('span');
+  conditionsIcon.className = 'svg-icon hour-icon';
+  conditionsIcon.id = `${hour.datetime}-icon`;
+  conditionsIcon.dataset.icon = hour.icon;
+  const cloudIcon = document.createElement('span');
+  cloudIcon.className = 'svg-icon hour-icon';
+  cloudIcon.id = `${hour.datetime}-cloud-icon`;
+  cloudIcon.dataset.icon = 'cloudy';
+  const windIcon = document.createElement('span');
+  windIcon.className = 'svg-icon hour-icon';
+  windIcon.id = `${hour.datetime}-wind-icon`;
+  windIcon.dataset.icon = 'wind';
+  const tempElem = createElement(temp, 'value' );
+  const tempContainer = createContainer(`${hour.datetime}-temp-icon`, 'flex-row bold', conditionsIcon,  tempElem);
   const timeElem = createElement(time, 'bold large value');
-  const tempElem = createElement(temp, 'bold value' );
   const cloudCoverElem = createElement(cloudCover, 'value');
+  const cloudContainer = createContainer(`${hour.datetime}-cloud-container`, 'flex-row', cloudIcon, cloudCoverElem);
   const conditionsElem = createElement(conditions, 'value');
   const windspeedElem = createElement(windspeed, 'value');
-
+  const windContainer = createContainer(`${hour.datatime}-wind-container`, 'flex-row', windIcon, windspeedElem);
   const hourContainer  = createContainer( 
     `${time}-hour`, 
     'flex-column card', 
     timeElem, 
-    tempElem, 
-    cloudCoverElem, 
-    windspeedElem, 
+    tempContainer, 
+    cloudContainer,
+    windContainer, 
     conditionsElem
   );
   return hourContainer;
