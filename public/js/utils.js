@@ -147,6 +147,51 @@ function createWindDescription(windspeed, winddir) {
   return `A ${match.adj} wind from the ${windDirection}; ${match.advice}`;
 }
 
+const iconMap = {
+  // Clear
+  "clear-day": "clear-day.svg",
+  "clear-night": "clear-night.svg",
+
+  // Partly cloudy
+  "partly-cloudy-day": "partly-cloudy-day.svg",
+  "partly-cloudy-night": "partly-cloudy-night.svg",
+
+  // Cloudy
+  "cloudy": "cloudy.svg",
+
+  // Rain & showers
+  "rain": "rain.svg",
+  "showers-day": "rain-day.svg",
+  "showers-night": "rain-night.svg",
+
+  // Thunder
+  "thunder-rain": "thunder.svg",
+  "thunder-showers-day": "thunder-day.svg",
+  "thunder-showers-night": "thunder-night.svg",
+
+  // Snow
+  "snow": "snow.svg",
+  "snow-showers-day": "snow-day.svg",
+  "snow-showers-night": "snow-night.svg",
+
+  // Atmosphere
+  "fog": "fog.svg",
+  "wind": "wind.svg",
+
+  // Ice things
+  "hail": "hail.svg",
+  "sleet": "sleet.svg"
+};
+
+async function insertWeatherIcon(condition, id) {
+  const file = iconMap[condition] || 'cloudy.svg';
+  const response = await fetch(`../assets/weather/${file}`);
+  const svg = await response.text();
+  console.log(svg);
+  const elem = document.getElementById(id);
+  elem.innerHTML = svg;
+}
+
 export {
   currentLocation, 
   units, 
@@ -155,5 +200,6 @@ export {
   MiToKm, 
   createWindDescription, 
   findWindDirection, 
-  getMoonphaseString
+  getMoonphaseString,
+  insertWeatherIcon
 };
