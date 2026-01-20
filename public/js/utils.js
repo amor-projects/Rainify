@@ -5,7 +5,7 @@ const weather = {
     this._current = data.currentConditions || '';
     this._today = data.days[0] || '';
     this._tomorrow = data.days[1] || '';
-    this._next12Days = data.days.slice(2, 14) || '';
+    this._next6Days = data.days.slice(2, 8) || '';
     this._location = {city: currentLocation.city, country: currentLocation.countryName} || {city: '', country: ''};
   },
   get current() {
@@ -17,8 +17,8 @@ const weather = {
   get tomorrow () {
     return this._tomorrow;
   },
-  get next12Days () {
-    return this._next12Days;
+  get next6Days () {
+    return this._next6Days;
   }
 }
 const units = {
@@ -187,7 +187,6 @@ async function insertWeatherIcon(condition, id) {
   const file = iconMap[condition] || 'cloudy.svg';
   const response = await fetch(`../assets/weather/${file}`);
   const svg = await response.text();
-  console.log(svg);
   const elem = document.getElementById(id);
   elem.innerHTML = svg;
 }
