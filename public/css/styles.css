@@ -1,11 +1,16 @@
 body {
   background-color: peachpuff;
-  font-size: calc((0.9rem + 1vw) / 2);
+  font-size: calc((0.8rem + 1.1vw) / 2);
+  min-height: 99vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #root {
-  height: fit-content;
-  margin: 7% 7%;
+  width: 90%;
+  height: auto;
   background-color: whitesmoke;
+  margin: 0 5%;
   padding: 1rem;
   border-radius: 1rem;
 }
@@ -19,19 +24,21 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 }
 .flex-column {
+  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .bold {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .large {
-  font-size: calc((3rem + 1.5vw) / 2);
+  font-size: calc((2.5rem + 1.6vw) / 2);
 }
 .xl {
   font-size: calc((3.5rem + 2vw) / 2);
@@ -86,4 +93,8 @@ body {
   color: black;
   font-weight: 800;
   background-color: azure;
+}
+.svg-icon {
+  width: 3em;
+  height: 3em;
 }

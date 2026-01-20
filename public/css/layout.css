@@ -12,7 +12,7 @@
 #main {
   grid-area: 4/1/16/8;
   display: grid;
-  grid-template: repeat(8, 1fr) / repeat(7, 1fr);
+  grid-template: repeat(8, 1fr) / repeat(11, 1fr);
   gap: 1rem;
 }
 #nav {
@@ -21,26 +21,29 @@
   gap: 5%;
 }
 #temp-and-description {
-  grid-area: 1/1/5/4;
+  grid-area: 1/1/5/6;
 }
 
 #low-high-feels {
-  grid-area: 1/4/3/6;
-}
-
-#dew-humidity-pressure {
   grid-area: 1/6/3/8;
 }
 
+#dew-humidity-pressure {
+  grid-area: 1/8/3/10;
+}
+
 #visibility-uv-cloud {
-  grid-area: 3/6/5/8;
+  grid-area: 1/10/3/12;
 }
 #wind-status {
-  grid-area: 3/4/5/6;
+  grid-area: 3/6/5/12;
+}
+.next-hours-title {
+  grid-area: 5/1/6/12;
 }
 #next-hours {
-  grid-area: 5/1/9/8;
-  gap: 1rem;
+  grid-area: 6/1/9/12;
+  gap: calc(0.4rem + 0.5vw)
 }
 #sidebar {
   grid-area: 4/8/16/10;
@@ -66,5 +69,5 @@
 }
 #main.days-view {
   display: grid;
-  grid-template: repeat(2, 1fr) / repeat(6, 1fr);
+  grid-template: repeat(2, 1fr) / repeat(3, 1fr);
 }
