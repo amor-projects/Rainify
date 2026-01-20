@@ -15,6 +15,7 @@ function handleNavBtn(btn) {
     renderRoot('next12Days', weather)
   }
 }
+
 function renderDateTimeAndSun(date, sunrise, sunset){
   const parent = document.querySelector('#date-time-sun');
   const dateElem = createElement(date, 'bold');
@@ -144,11 +145,17 @@ function renderLunarClanendar(moonphase){
     
 }
 
-function renderTabs(){
+function renderTabs(tab){
   const todayTab = createButton('Today', 'today-tab', 'nav-btn', handleNavBtn);
   const tomorrowTab = createButton('Tomorrow', 'tomorrow-tab', 'nav-btn', handleNavBtn);
   const next12DaysTab = createButton('Next 12 Days', 'next-12-days', 'nav-btn', handleNavBtn);
-
+  if (tab === 'tomorrow') {
+    tomorrowTab.classList.add('active-tab');
+  } else if (tab === 'next12Days') {
+    next12DaysTab.classList.add('active-tab');
+  } else {
+    todayTab.classList.add('active-tab');
+  }
   const nav = document.getElementById('nav');
   nav.replaceChildren();
   nav.append(todayTab, tomorrowTab, next12DaysTab);

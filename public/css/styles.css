@@ -4,7 +4,7 @@ body {
 }
 #root {
   height: fit-content;
-  margin: 2rem 2rem;
+  margin: 7% 7%;
   background-color: whitesmoke;
   padding: 1rem;
   border-radius: 1rem;
@@ -79,6 +79,11 @@ body {
   height: 3rem;
   border-radius: 50%;
 }
-#temp-and-description {
-  
+.nav-btn {
+  color: gray;
+}
+.active-tab {
+  color: black;
+  font-weight: 800;
+  background-color: azure;
 }
