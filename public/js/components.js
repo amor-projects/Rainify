@@ -54,7 +54,7 @@ function createAnHour (hour) {
   const cloudCoverElem = createElement(cloudCover, 'value');
   const cloudContainer = createContainer(`${hour.datetime}-cloud-container`, 'flex-row', cloudIcon, cloudCoverElem);
   const conditionsElem = createElement(conditions, 'value');
-  const windspeedElem = createElement(windspeed, 'value');
+  const windspeedElem = createElement(`${windspeed}${units.speed}`, 'value');
   const windContainer = createContainer(`${hour.datatime}-wind-container`, 'flex-row', windIcon, windspeedElem);
   const hourContainer  = createContainer( 
     `${time}-hour`, 

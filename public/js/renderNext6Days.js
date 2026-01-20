@@ -30,7 +30,7 @@ function createOneDayCard(day) {
   windIcon.className = 'svg-icon day-icon';
   windIcon.id = `${day.datetime}-wind-icon`;
   windIcon.dataset.icon = 'wind';
-  const windspeed = createElement(`${day.windspeed}${units.temp}`, 'day-wind-speed');
+  const windspeed = createElement(`${day.windspeed}${units.speed}`, 'day-wind-speed');
   const windContainer = createContainer(`${day.datetime}-wind-container`, 'flex-row', windIcon, windspeed);
 
   const conditions = createElement(day.conditions, 'day-conditions');
