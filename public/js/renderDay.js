@@ -1,4 +1,4 @@
-import { createContainer, createElement, createLabeledElement, createAnHour} from "./components.js";
+import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard} from "./components.js";
 import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, insertWeatherIcon } from "./utils.js";
 
 const main = document.querySelector('#main');
@@ -9,53 +9,65 @@ function insertAllHourIcons() {
     insertWeatherIcon(icon.dataset.icon, icon.id);
   });
 }
-function renderTempAndDescription(temp, description){
+function renderTempAndDescription(temp, condition, low, high){
   const parent = document.getElementById('temp-and-description')
-  if (units.temp == '°C') {
+
+  if (units.temp === '°C') {
     temp = toCelsius(temp);
+    low = toCelsius(low);
+    high = toCelsius(high);
   }
+  temp = `${temp}${units.temp}`;
+  low = `${low}${units.temp}`;
+  high = `${high}${units.temp}`;
+  condition = `Conditions are expected to be ${condition} throughout the day.`
   const icon = document.createElement('span');
   icon.id = 'temp-and-desc-icon';
   icon.classList.add('svg-icon');
   const tempElement = createElement(temp, 'value');
   const tempContainer = createContainer('temp-and-icon', 'flex-row xl bold',tempElement, icon);
-  const descriptionElement = createElement(description, 'description bold large');
+  const lowElem = createLabeledElement('low-container', 'L: ', low);
+  const highElem = createLabeledElement('high-container', 'H: ', high);
+  const lowHigh = createContainer('low-high', 'small flex-column', lowElem, highElem);
+  const descriptionElement = createElement(condition, 'description bold large');
   if (!parent) {
-    const tempAndDescription = createContainer('temp-and-description', 'flex-column card', tempContainer, descriptionElement);
+    const tempAndDescription = createContainer('temp-and-description', 'flex-column card', tempContainer, lowHigh, descriptionElement);
     main.append(tempAndDescription);
     return 1;
   }
   parent.replaceChildren();
-  parent.append(tempContainer, descriptionElement);
+  parent.append(tempContainer, lowHigh, descriptionElement);
   return 0;
 }
 
-function renderLowHighFeels(low, high, feels){
-  const parent = document.getElementById('low-high-feels');
+function renderFeels(temp, feels){
+  const parent = document.getElementById('Feels-container');
   if (units.temp == '°C') {
-    low = toCelsius(low);
-    high = toCelsius(high);
     feels = toCelsius(feels);
   }
-  low += units.temp;
-  high += units.temp;
-  feels += units.temp;
-  const lowElem = createLabeledElement('low-container', 'Low', low);
-  const highElem = createLabeledElement('high-container', 'High', high);
-  const feelsElem = createLabeledElement('feels-container', 'Feels', feels);
-  
-  if (!parent) {
-    const lowHighFeels = createContainer('low-high-feels', 'flex-column card', lowElem, highElem, feelsElem);
-    main.appendChild(lowHighFeels);
-    return 1;
+  feels = `${feels}${units.temp}`;
+  let feelsDescription = '';
+  if (feels < temp) {
+    feelsDescription = 'It feels colder than the actual temperature';
+  } else if (feels > temp) {
+    feelsDescription = 'It feels warmer than the actual temperature';
+  } else {
+    feelsDescription = 'Similar to the actual temperature';
   }
-  parent.replaceChildren();
-  parent.append(lowElem, highElem, feelsElem);
-  return 0;
+  const feelslike = createLabeledCard('Feels', feels, 'feels-like', feelsDescription);
+  if (!parent) {
+    const feelsContainer = document.createElement('div');
+    feelsContainer.id = 'Feels-container';
+    feelsContainer.appendChild(feelslike);
+    main.append(feelsContainer);
+  } else {
+    parent.removeChildren();
+    parent.appendChild(feelslike);
+  }  
 }
 
-function renderDewHumidityPressure(dew, humidity, pressure){
-  const parent = document.getElementById('dew-humidity-pressure');
+function renderPressure(pressure){
+  const parent = document.getElementById('Pressure-container');
   
   if (units.temp == '°C') {
     dew = toCelsius(dew);
@@ -76,6 +88,18 @@ function renderDewHumidityPressure(dew, humidity, pressure){
   parent.replaceChildren();
   parent.append(dewElem, humidityElem, pressureElem);
   return 0;
+}
+function renderHumidityDew(humidity, dew) {
+  const parent = document.getElementById('Humidity-container');
+  const dewDescription = `The dew point is ${dew}${units.dew} right now.`;
+  const humidtyCard = createLabeledCard('Humidity', `${humidity}%`, '', dewDescription);
+  if (!parent) {
+    const humidtyContainer = createContainer('Humidity-container', '', humidtyCard);
+    main.append(humidtyContainer);
+  } else {
+    parent.replaceChildren();
+    parent.appendChild(humidtyCard);
+  }
 }
 
 function renderVisibilityUvCloudCover(visibility, uvindex, cloudCover){
@@ -161,7 +185,7 @@ function renderDay (type, current, today = null)  {
   main.replaceChildren();
   main.classList.remove('days-view');
   const temp = current.temp;
-  const description = today.description;
+  const condition = today.conditions;
   const low = today.tempmin;
   const high = today.tempmax;
   const feels = current.feelslike;
@@ -185,9 +209,10 @@ function renderDay (type, current, today = null)  {
   }
   
   // DOM Elements
-  renderTempAndDescription(temp, description);
-  renderLowHighFeels(low, high, feels);
-  renderDewHumidityPressure(dew, humidity, pressure);
+  renderTempAndDescription(temp, condition, low, high);
+  renderFeels(temp, feels);
+  // renderDewHumidityPressure(dew, humidity, pressure);
+  renderHumidityDew(humidity, dew);
   renderVisibilityUvCloudCover(visibility, uvindex, cloudCover);
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir);
   const nextHours = createElement('Next Hours', 'large next-hours-title');

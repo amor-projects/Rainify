@@ -17,6 +17,21 @@ function createElement(value, classNames) {
   return valueELem;
 };
 
+function createLabeledCard(label, value, classNames, description) {
+  const container = document.createElement('div');
+  container.id = `${label}-card`;
+  container.className = `${classNames} card flex-column`;
+  const labelElem = createElement(label, 'medium');
+  const labelIcon = document.createElement('span');
+  labelIcon.id = `${label}-label-icon`;
+  labelIcon.className = 'icon';
+  labelIcon.dataset.icon = label;
+  const titleCard = createContainer(`${label}-title`, 'flex-row gray', labelIcon, labelElem);
+  const valueElem = createElement(value, `${label}-value large`);
+  const descriptionElem = createElement(description, 'small');
+  container.append(titleCard, valueElem, descriptionElem);
+  return container;
+}
 function createLabeledElement(id, label, value) {
   const labelElem = createElement(label, 'bold');
   const valueElem = createElement(value, 'value');
@@ -81,5 +96,6 @@ export {
   createElement, 
   createLabeledElement, 
   createAnHour, 
-  createButton
+  createButton,
+  createLabeledCard
 };
