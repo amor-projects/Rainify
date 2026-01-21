@@ -136,10 +136,10 @@ function renderNextHours(hours, currentTime){
     }
   }
   const length = upcomingHours.length;
-  if (length > 7) {
-    upcomingHours.splice(7,);
+  if (length > 6) {
+    upcomingHours.splice(6,);
   } else  {
-    upcomingHours = hours.slice(17, 24);
+    upcomingHours = hours.slice(18, 24);
   }
   if (!parent) {
     for (const hour of upcomingHours) {

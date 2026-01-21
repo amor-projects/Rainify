@@ -1,5 +1,4 @@
 body {
-  background-color: peachpuff;
   font-size: calc((0.8rem + 1.1vw) / 2);
   min-height: 99vh;
   display: flex;
@@ -15,7 +14,7 @@ body {
   border-radius: 1rem;
 }
 .card {
-  background-color: rgb(240, 255, 255);
+  background-color: rgb(222, 248, 255);
   border-radius: 1rem;
   padding: 0.5rem;
 }
@@ -56,14 +55,14 @@ body {
   margin: auto;
 }
 .btn, .search-input {
-  background-color: azure;
+  background-color: rgb(222, 248, 255);
   border: none;
   font: inherit;
   padding: 0.5rem 1rem;
   border-radius: 1rem;
 }
 #search-bar {
-  height: 50%;
+  height: calc(2rem + 0.5vh);
   padding: 2px;
   gap: 2px;
   border : 2px solid;
@@ -92,7 +91,7 @@ body {
 .active-tab {
   color: black;
   font-weight: 800;
-  background-color: azure;
+  background-color: rgb(222, 248, 255);
 }
 .svg-icon {
   width: 3em;

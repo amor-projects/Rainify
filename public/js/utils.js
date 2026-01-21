@@ -1,4 +1,4 @@
-const currentLocation = {locality: 'Multan', countryName: 'Pakistan'};
+const currentLocation = {locality: 'Multan'};
 
 const weather = {
   setWeather: function (data) {
@@ -6,7 +6,7 @@ const weather = {
     this._today = data.days[0] || '';
     this._tomorrow = data.days[1] || '';
     this._next6Days = data.days.slice(2, 8) || '';
-    this._location = {city: currentLocation.city, country: currentLocation.countryName} || {city: '', country: ''};
+    this._location = {city: currentLocation.city} || {city: ''};
   },
   get current() {
     return this._current;

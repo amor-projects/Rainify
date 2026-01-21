@@ -43,7 +43,7 @@
 }
 #next-hours {
   grid-area: 6/1/9/12;
-  gap: calc(0.4rem + 0.5vw)
+  gap: calc(0.4rem + 0.5vw);
 }
 #sidebar {
   grid-area: 4/8/16/10;

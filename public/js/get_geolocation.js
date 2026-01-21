@@ -12,7 +12,6 @@ const successLocation = async (position) => {
       } else {
         const data = await response.json();
         currentLocation.locality = data.locality;
-        currentLocation.countryName = data.countryName;
       }
     } else {
       throw new Error("Invalid Coordinates Object!");

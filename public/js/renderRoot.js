@@ -163,7 +163,7 @@ function renderTabs(tab){
 
 function renderLocation(currentLocation){
   const parent = document.querySelector('#location-container');
-  const locationString = `${currentLocation.locality}, ${currentLocation.countryName}`;
+  const locationString = `${currentLocation.locality}`;
   const locationElem = createElement(locationString, 'xl bold');
   const locationIcon = document.createElement('i');
   locationIcon.className = 'fa-solid fa-map-marker';
