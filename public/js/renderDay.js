@@ -102,6 +102,26 @@ function renderHumidityDew(humidity, dew) {
   }
 }
 
+function renderVisibility(visibility, reason) {
+  const parent = document.getElementById('Visibility-container');
+  let limit = 5;
+  if (units.visibility === 'Km') {
+    visibility = MiToKm(visibility);
+    limit = MiToKm(limit);
+  }
+  reason === 'fog' ? reason = 'Fog' : reason ='Smoke';
+  let description;
+  visibility < limit ? description = `${reason} is affecting visiblity`: description = 'Visiblity is Normal';
+  const visibilityCard = createLabeledCard('Visiblity', visibility, '', description);
+  if (!parent) {
+    const visibilityContainer = createContainer('Visiblity-container', '', visibilityCard);
+    main.append(visibilityContainer);
+  } else {
+    parent.replaceChildren();
+    parent.appendChild(visibilityCard);
+  }
+}
+
 function renderVisibilityUvCloudCover(visibility, uvindex, cloudCover){
   const parent = document.getElementById('visibility-uv-cloud');
   if (units.visibility == 'Km') {
@@ -213,7 +233,8 @@ function renderDay (type, current, today = null)  {
   renderFeels(temp, feels);
   // renderDewHumidityPressure(dew, humidity, pressure);
   renderHumidityDew(humidity, dew);
-  renderVisibilityUvCloudCover(visibility, uvindex, cloudCover);
+  renderVisibility(visibility, icon);
+  // renderVisibilityUvCloudCover(visibility, uvindex, cloudCover);
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir);
   const nextHours = createElement('Next Hours', 'large next-hours-title');
   main.append(nextHours);
