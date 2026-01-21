@@ -68,27 +68,29 @@ function renderFeels(temp, feels){
 
 function renderPressure(pressure){
   const parent = document.getElementById('Pressure-container');
-  
-  if (units.temp == '°C') {
-    dew = toCelsius(dew);
-  };
-  dew += units.dew;
-  humidity += '%';
-  pressure += ` ${units.pressure}`;
-
-  const dewElem = createLabeledElement('dew-container', 'Dew', dew);
-  const humidityElem = createLabeledElement('humidity-container', 'Humidity', humidity);
-  const pressureElem = createLabeledElement('pressure-container', 'Pressure', pressure);
-
-  if (!parent) {
-    const dewHumidityPressure = createContainer('dew-humidity-pressure', 'flex-column card', dewElem, humidityElem, pressureElem);
-    main.appendChild(dewHumidityPressure);
-    return 1;
+  let description = '';
+  if (pressure < 980) {
+    description = 'Very low pressure. Expect severe weather and strong winds';
+  } else if (pressure < 1000) {
+    description = 'Low pressure. Expect unsettled weather, clouds, or rain.';
+  } else if (pressure < 1025 ) {
+    description = 'Pressure is normal. Conditions are typical and stable.';
+  } else if (pressure < 1040) {
+    description = 'High pressure. Expect clear skies and calm, dry weather.';
+  } else if (pressure > 1040 ) {
+    description = 'Very high pressure. Very stable, dry, and cool conditions.';
   }
-  parent.replaceChildren();
-  parent.append(dewElem, humidityElem, pressureElem);
-  return 0;
+  pressure = `${pressure} ${units.pressure}`;
+  const pressureCard = createLabeledCard('Pressure', pressure, '', description);
+  if (!parent) {
+    const pressureContainer = createContainer('Pressure-container', '', pressureCard );
+    main.appendChild(pressureContainer);
+  } else {
+    parent.replaceChildren();
+    parent.append(pressureCard);
+  }
 }
+
 function renderHumidityDew(humidity, dew) {
   const parent = document.getElementById('Humidity-container');
   const dewDescription = `The dew point is ${dew}${units.dew} right now.`;
@@ -273,6 +275,7 @@ function renderDay (type, current, today = null)  {
   renderHumidityDew(humidity, dew);
   renderVisibility(visibility, icon);
   renderUvIndex(uvindex);
+  renderPressure(pressure);
   // renderVisibilityUvCloudCover(visibility, uvindex, cloudCover);
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir);
   const nextHours = createElement('Next Hours', 'large next-hours-title');
