@@ -189,27 +189,30 @@ function renderPrecip(precip = 0, next24HourPrecip, preciptype) {
   }
 }
 
-function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir){
-  const parent = document.getElementById('wind-status');
+function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir, todayWindGust = 0){
+  const parent = document.getElementById('Wind-status-container');
   const windspeed = currentWindspeed || todayWindspeed;
   let winddir = currentWinddir || todayWinddir;
   if (units.speed == 'Km/h') {
     windspeedWithUnits = MiToKm (windspeed);
+    todayWindGust = MiToKm(todayWindGust);
   }
   const windspeedWithUnits = `${windspeed} ${units.speed}`;
+  const windgustWithUnits = `${todayWindGust} ${units.speed}`;
   winddir = findWindDirection(winddir);
-  const windspeedElem = createElement(windspeedWithUnits, 'wind-speed bold large');
+  const windGustElem = createLabeledElement('wind-gust', 'Gusts', windgustWithUnits);
+  const windDirElem = createLabeledElement('wind-dir', 'Direction', winddir);
   const windDescription = createWindDescription(windspeed, winddir);
-  const windDescriptionElem = createElement(windDescription, 'wind-description');
-  const wind = createContainer('wind-container', 'flex-row', windspeedElem);
+  const wind = createContainer('wind-container', 'flex-column', windGustElem, windDirElem);
 
+  const windCard = createLabeledCard('Wind', windspeed, 'flex-row', windDescription, wind);
   if (!parent) {
-    const windStatus = createContainer('wind-status', 'flex-column card', wind, windDescriptionElem);
+    const windStatus = createContainer('Wind-status-container', 'flex-column card', windCard);
     main.append(windStatus);
-    return 1;
-  }
+  } else {
   parent.replaceChildren();
-  parent.append(wind, windDescriptionElem);
+  parent.append(windCard);
+  }
 }
 
 function renderNextHours(hours, currentTime){
@@ -271,6 +274,7 @@ function renderDay (type, current, today = null, tomorrow)  {
   const precip = current.precip;
   const tomorrowPrecip = tomorrow.precip;
   const preciptype = today.preciptype ? today.preciptype[0] : 'rain';
+  const todayWindgust = today.windgust || 0;
   const date = new Date();
   let currentHour = '00'
   if (type === 'today') {
@@ -286,7 +290,7 @@ function renderDay (type, current, today = null, tomorrow)  {
   renderUvIndex(uvindex);
   renderPressure(pressure);
   renderPrecip(precip, tomorrowPrecip, preciptype)
-  renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir);
+  renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir, todayWindgust);
   const nextHours = createElement('Next Hours', 'large next-hours-title');
   main.append(nextHours);
   renderNextHours(hours, String(currentHour));
