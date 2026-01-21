@@ -122,6 +122,44 @@ function renderVisibility(visibility, reason) {
   }
 }
 
+function renderUvIndex (uvindex) {
+  const parent = document.getElementById('Uv-index-container')
+  const uvBar = document.createElement('div');
+  uvBar.id = 'uv-bar';
+  uvBar.className = 'uv-bar';
+  const uvIndicator = document.createElement('div');
+  uvIndicator.id = 'uv-dot';
+  uvIndicator.className = 'uv-indicator';
+  uvBar.appendChild(uvIndicator);
+  const maxUV = 11;
+
+  const displayIndex = Math.min(uvindex, maxUV);
+  const percentage = (displayIndex / maxUV) * 100;
+  uvIndicator.style.left = `${percentage}%`;
+  let description = '';
+  if (uvindex <= 2) {
+    description = 'Low for the rest of the day';
+  } else if (uvindex < 5) {
+    description = 'Moderate, Seek shade during midday hours';
+  } else if (uvindex < 7) {
+    description = 'High, Protection highly recommended';
+  } else if (uvindex < 10) {
+    description = 'Very High, Take extra precautions'
+  } else {
+    description = 'Extreme, Unprotected skin can burn in minutes';
+  }
+
+  const uvCard = createLabeledCard('UV Index', uvindex, '', description, uvBar);
+
+  if (!parent) {
+    const uvIndexContainer = createContainer('Uv-index-container', '', uvCard);
+    main.append(uvIndexContainer);
+  } else {
+    parent.replaceChildren();
+    parent.append(uvCard);
+  }
+}
+
 function renderVisibilityUvCloudCover(visibility, uvindex, cloudCover){
   const parent = document.getElementById('visibility-uv-cloud');
   if (units.visibility == 'Km') {
@@ -234,6 +272,7 @@ function renderDay (type, current, today = null)  {
   // renderDewHumidityPressure(dew, humidity, pressure);
   renderHumidityDew(humidity, dew);
   renderVisibility(visibility, icon);
+  renderUvIndex(uvindex);
   // renderVisibilityUvCloudCover(visibility, uvindex, cloudCover);
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir);
   const nextHours = createElement('Next Hours', 'large next-hours-title');

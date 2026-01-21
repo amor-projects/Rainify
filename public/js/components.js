@@ -17,7 +17,7 @@ function createElement(value, classNames) {
   return valueELem;
 };
 
-function createLabeledCard(label, value, classNames, description) {
+function createLabeledCard(label, value, classNames, description, child = null) {
   const container = document.createElement('div');
   container.id = `${label}-card`;
   container.className = `${classNames} card flex-column`;
@@ -29,7 +29,7 @@ function createLabeledCard(label, value, classNames, description) {
   const titleCard = createContainer(`${label}-title`, 'flex-row gray', labelIcon, labelElem);
   const valueElem = createElement(value, `${label}-value large`);
   const descriptionElem = createElement(description, 'small');
-  container.append(titleCard, valueElem, descriptionElem);
+  child ? container.append(titleCard, valueElem, child, descriptionElem) : container.append(titleCard, valueElem, descriptionElem);
   return container;
 }
 function createLabeledElement(id, label, value) {
