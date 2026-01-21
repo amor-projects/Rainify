@@ -272,9 +272,9 @@ function renderRoot(tab, weather) {
   renderTabs(tab);
   renderSideBar(weather, tab);
   if (tab === 'today') {
-    renderDay('today', weather.current, weather.today);
+    renderDay('today', weather.current, weather.today, weather.tomorrow);
   } else if (tab === 'tomorrow') {
-    renderDay('tomorrow', weather.tomorrow);
+    renderDay('tomorrow','','', weather.tomorrow);
   } else if (tab === 'next6Days') {
     renderNextSixDays(weather.next6Days);
   } else {

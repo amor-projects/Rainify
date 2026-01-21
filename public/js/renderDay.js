@@ -1,5 +1,5 @@
 import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard} from "./components.js";
-import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, insertWeatherIcon } from "./utils.js";
+import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, insertWeatherIcon, inchTomm } from "./utils.js";
 
 const main = document.querySelector('#main');
 
@@ -162,27 +162,31 @@ function renderUvIndex (uvindex) {
   }
 }
 
-function renderVisibilityUvCloudCover(visibility, uvindex, cloudCover){
-  const parent = document.getElementById('visibility-uv-cloud');
-  if (units.visibility == 'Km') {
-    visibility = MiToKm(visibility);
-  }
-  
-  visibility +=` ${units.visibility}`;
-  cloudCover += '%';
+function renderPrecip(precip = 0, next24HourPrecip, preciptype) {
+  const parent = document.getElementById('Precipitation-container');
+  precip = inchTomm(precip);
+  next24HourPrecip = inchTomm(next24HourPrecip);
+  let description = '';
 
-  const visibilityElem = createLabeledElement('visibility-container', 'Visibility', visibility);
-  const cloudCoverElem = createLabeledElement('cloud-cover-container', 'Cloud Cover', cloudCover);
-  const uvindexElem = createLabeledElement('uvindex-container', 'UV Index', uvindex);
+  if (precip > 0) {
+    description = `Currently ${precip} of ${preciptype} is falling.`
+  } else if (next24HourPrecip > 0) {
+    let intensity = "";
+    next24HourPrecip < 10 ? intensity = 'Light' : intensity = 'Heavy';
+    description = `${intensity} ${preciptype} expected. Total of ${next24HourPrecip}mm in the next 24 hours`;
+  } else {
+    description = `No ${preciptype} is expected in next 24h`
+  }
+
+  const precipCard = createLabeledCard('Precipitation', precip, '', description);
 
   if (!parent) {
-    const visibilityUvCloud = createContainer('visibility-uv-cloud', 'flex-column card', visibilityElem, cloudCoverElem, uvindexElem);
-    main.appendChild(visibilityUvCloud);
-    return 1;
+    const precipContainer = createContainer('Precipitation-container', '', precipCard);
+    main.appendChild(precipContainer);
+  } else {
+    parent.replaceChildren();
+    parent.append(precipCard);
   }
-  parent.replaceChildren();
-  parent.append(visibilityElem, cloudCoverElem, uvindexElem);
-  return 0;
 }
 
 function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir){
@@ -239,8 +243,11 @@ function renderNextHours(hours, currentTime){
   return 0;
 }
 
-function renderDay (type, current, today = null)  {
-  if (today === null) today = current;
+function renderDay (type, current, today = null, tomorrow)  {
+  if (type === 'tomorrow') {
+    current = tomorrow;
+    today = tomorrow;
+  }
   const main = document.querySelector('#main');
   main.replaceChildren();
   main.classList.remove('days-view');
@@ -261,6 +268,9 @@ function renderDay (type, current, today = null)  {
   const todayWinddir = today.winddir;
   const hours = today.hours;
   const icon = current.icon;
+  const precip = current.precip;
+  const tomorrowPrecip = tomorrow.precip;
+  const preciptype = today.preciptype ? today.preciptype[0] : 'rain';
   const date = new Date();
   let currentHour = '00'
   if (type === 'today') {
@@ -271,12 +281,11 @@ function renderDay (type, current, today = null)  {
   // DOM Elements
   renderTempAndDescription(temp, condition, low, high);
   renderFeels(temp, feels);
-  // renderDewHumidityPressure(dew, humidity, pressure);
   renderHumidityDew(humidity, dew);
   renderVisibility(visibility, icon);
   renderUvIndex(uvindex);
   renderPressure(pressure);
-  // renderVisibilityUvCloudCover(visibility, uvindex, cloudCover);
+  renderPrecip(precip, tomorrowPrecip, preciptype)
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir);
   const nextHours = createElement('Next Hours', 'large next-hours-title');
   main.append(nextHours);

@@ -191,6 +191,10 @@ async function insertWeatherIcon(condition, id) {
   elem.innerHTML = svg;
 }
 
+function inchTomm(inch) {
+  return (25.4 * inch).toFixed(2);
+}
+
 export {
   currentLocation, 
   units, 
@@ -200,5 +204,6 @@ export {
   createWindDescription, 
   findWindDirection, 
   getMoonphaseString,
-  insertWeatherIcon
+  insertWeatherIcon, 
+  inchTomm
 };
