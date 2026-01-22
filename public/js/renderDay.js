@@ -59,16 +59,18 @@ function renderFeels(temp, feels){
   }  
 }
 
-function renderPressure(pressure){
+function renderPressure(pressure, type){
   const parent = document.getElementById('Pressure-container');
   let description = '';
   if (pressure < 980) {
     description = 'Very low pressure. Expect severe weather and strong winds';
   } else if (pressure < 1000) {
     description = 'Low pressure. Expect unsettled weather, clouds, or rain.';
-  } else if (pressure < 1025 ) {
+  } else if (pressure < 1025 && type === 'today' ) {
     description = 'Pressure is normal. Conditions are typical and stable.';
-  } else if (pressure < 1040) {
+  } else if (pressure < 1025 && type === 'tomorrow') {
+    description = 'Pressure will be Normal. Conditions will be typical and stable';
+  }else if (pressure < 1040) {
     description = 'High pressure. Expect clear skies and calm, dry weather.';
   } else if (pressure > 1040 ) {
     description = 'Very high pressure. Very stable, dry, and cool conditions.';
@@ -85,9 +87,11 @@ function renderPressure(pressure){
   }
 }
 
-function renderHumidityDew(humidity, dew) {
+function renderHumidityDew(humidity, dew, type) {
   const parent = document.getElementById('Humidity-container');
-  const dewDescription = `The dew point is ${dew}${units.dew} right now.`;
+  let dewDescription = '';
+  if (type === 'today') dewDescription = `The dew point is ${dew}${units.dew} right now.`;
+  else dewDescription = `The dew point is expected to be ${dew}${units.dew}.`
   const humidityIcon = createIcon('wi wi-humidity', 'humidity-icon');
   const humidtyCard = createLabeledCard('Humidity', humidityIcon, `${humidity}%`, '', dewDescription);
   if (!parent) {
@@ -99,7 +103,7 @@ function renderHumidityDew(humidity, dew) {
   }
 }
 
-function renderVisibility(visibility, reason) {
+function renderVisibility(visibility, reason, type) {
   const parent = document.getElementById('Visibility-container');
   let limit = 5;
   if (units.visibility === 'Km') {
@@ -109,6 +113,9 @@ function renderVisibility(visibility, reason) {
   reason === 'fog' ? reason = 'Fog' : reason ='Smoke';
   let description;
   visibility < limit ? description = `${reason} is affecting visiblity`: description = 'Visiblity is Normal';
+  if (type === 'tomorrow' ) {
+    visibility < limit ? description = `${reason} will be affecting visbility` : description = 'Visbility will be Normal';
+  }
   const visibilityIcon = createIcon('wi wi-fog', 'visibility-icon');
   const visibilityCard = createLabeledCard('Visibility', visibilityIcon, `${visibility}${units.visibility}`, '', description);
   if (!parent) {
@@ -159,13 +166,13 @@ function renderUvIndex (uvindex) {
   }
 }
 
-function renderPrecip(precip = 0, next24HourPrecip, preciptype) {
+function renderPrecip(precip = 0, next24HourPrecip, preciptype, type) {
   const parent = document.getElementById('Precipitation-container');
   precip = inchTomm(precip);
   next24HourPrecip = inchTomm(next24HourPrecip);
   let description = '';
 
-  if (precip > 0) {
+  if (precip > 0 && type === 'today') {
     description = `Currently ${precip} of ${preciptype} is falling.`
   } else if (next24HourPrecip > 0) {
     let intensity = "";
@@ -215,7 +222,7 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   }
 }
 
-function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch) {
+function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch, type) {
   let description = '';
   let icon = '';
   if (sunsetEpoch - timeEpoch > 60) {
@@ -335,13 +342,13 @@ function renderDay (type, current, today = null, tomorrow)  {
   // DOM Elements
   renderTempAndDescription(temp, condition, icon, low, high);
   renderFeels(temp, feels);
-  renderPressure(pressure);
-  renderHumidityDew(humidity, dew);
-  renderVisibility(visibility, icon);
+  renderPressure(pressure, type);
+  renderHumidityDew(humidity, dew, type);
+  renderVisibility(visibility, icon, type);
   renderUvIndex(uvindex);
-  renderPrecip(precip, next24HoursPrecip, preciptype)
+  renderPrecip(precip, next24HoursPrecip, preciptype, type)
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir, todayWindgust);
-  renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch);
+  renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch, type);
   renderNextHours(next24Hours);
 }
 
