@@ -195,6 +195,12 @@ function inchTomm(inch) {
   return (25.4 * inch).toFixed(2);
 }
 
+function convertEpochTohourAndMin(epoch) {
+  const time = [0, 0];
+  time[0] = Math.trunc(epoch / 3600);
+  time[1] = Math.trunc((epoch - time[0] * 3600) / 60);
+  return time;
+}
 export {
   currentLocation, 
   units, 
@@ -205,5 +211,6 @@ export {
   findWindDirection, 
   getMoonphaseString,
   insertWeatherIcon, 
-  inchTomm
+  inchTomm,
+  convertEpochTohourAndMin
 };
