@@ -4,6 +4,7 @@ import { renderNext12Days } from "./renderNext12Days.js";
 import { currentLocation, weather} from "./utils.js";
 import {fetchWeather} from "./main.js";
 
+const body = document.querySelector('body');
 const header = document.querySelector('#header');
 function handleNavBtn(btn) {
   if (btn.id == 'today-tab') {
@@ -14,7 +15,6 @@ function handleNavBtn(btn) {
     renderRoot('next12Days', weather)
   }
 }
-
 
 function renderTabs(tab){
   const todayTab = createButton('Today', 'today-tab', 'nav-btn', handleNavBtn);
@@ -91,7 +91,17 @@ function renderToggle(){
   darkBtn.appendChild(moonIcon);
   darkBtn.className = 'toggle btn';
   lightBtn.className = 'toggle btn';
-
+  lightBtn.classList.add('active-toggle');
+  lightBtn.addEventListener('click', () => {
+    body.classList.remove('dark-theme');
+    if (!lightBtn.classList.contains('active-toggle')) lightBtn.classList.add('active-toggle');
+    darkBtn.classList.remove('active-toggle');
+  })
+  darkBtn.addEventListener('click', () => {
+    if (!body.classList.contains('dark-theme')) body.classList.add('dark-theme');
+    if (!darkBtn.classList.contains('active-toggle')) darkBtn.classList.add('active-toggle');
+    lightBtn.classList.remove('active-toggle')
+  })
   if (!parent) {
     const toggles = createContainer('toggles', 'flex-row', lightBtn, darkBtn);
     header.appendChild(toggles);

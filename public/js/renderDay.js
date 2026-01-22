@@ -207,7 +207,7 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   const windIcon = createIcon('wi wi-windy');
   const windCard = createLabeledCard('Wind', windIcon, windspeedWithUnits, '', windDescription, wind);
   if (!parent) {
-    const windStatus = createContainer('Wind-status-container', 'flex-column card', windCard);
+    const windStatus = createContainer('Wind-status-container', 'flex-column', windCard);
     main.append(windStatus);
   } else {
   parent.replaceChildren();
@@ -241,7 +241,7 @@ function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpo
   const sunIcon = createIcon(`wi wi-${icon}`);
   const sunCard = createLabeledCard('Sun', sunIcon, '', '', description,sunRiseAndSet );
   if (!parent) {
-    const sunStatus = createContainer('Sun-rise-and-set-container', 'flex-column card',sunCard);
+    const sunStatus = createContainer('Sun-rise-and-set-container', 'flex-column',sunCard);
     main.append(sunStatus);
   } else {
     parent.replaceChildren();

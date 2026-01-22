@@ -6,16 +6,20 @@ body {
   align-items: center;
   font-family: 'Comforta';
 }
+body.dark-theme {
+  background-color: rgb(10, 10, 10);
+  color: whitesmoke;
+}
 #root {
   width: 90%;
   height: auto;
-  background-color: rgb(240, 245, 255);
+  background-color: rgba(128, 128, 128, 0.1) ;
   margin: 0 5%;
   padding: 1rem;
   border-radius: 1rem;
 }
 .card {
-  background-color: white;
+  background-color: rgba(128, 128, 128, 0.1) ;
   height: 100%;
   border-radius: 1rem;
   padding: 0.5rem;
@@ -57,7 +61,8 @@ body {
   margin-left: 0.5rem;
 }
 .btn, .search-input {
-  background-color: rgb(245, 240, 255);
+  background-color: rgb(230, 240, 255);
+  color: inherit;
   border: none;
   font: inherit;
   padding: 0.5rem 1rem;
@@ -67,7 +72,7 @@ body {
   height: 2.5em;
   gap: 2px;
   border: none;
-  box-shadow: 1px 1px 3px rgba(128, 128, 128, 0.3);
+  box-shadow: 1px 1px 5px rgba(128, 128, 128, 0.3);
   border-radius: 1.5rem;
 }
 .search-input {
@@ -85,6 +90,10 @@ body {
   height: 3rem;
   width: 3rem;
   border-radius: 50%;
+  background-color: transparent;
+}
+.active-toggle {
+  background-color: rgba(128, 128, 128, 0.1);
 }
 .profile-pic > img {
   width: 3rem;
@@ -97,7 +106,7 @@ body {
 .active-tab {
   color: black;
   font-weight: 800;
-  background-color: rgb(245, 240, 255);
+  background-color: rgb(230, 240, 255);
 }
 .gray {
   opacity: 0.7;
@@ -120,7 +129,7 @@ body {
   background: linear-gradient(to right, rgba(128, 128, 128, 0.1), rgba(0, 0, 0, 0));
 }
 #hours-container {
-  margin: 2px 4px;
+  padding: 2px 4px;
 }
 #hours-container > [id$='00-hour'] {
   min-width: 125px;

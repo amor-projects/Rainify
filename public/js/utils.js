@@ -184,7 +184,7 @@ function convertEpochTohourAndMin(epoch) {
 }
 function getNext24Hours(today, tomorrow, currentHour ) {
   const next24Hours = [];
-  for (let i = 0, j = currentHour + 1, k = 0; i < 24; i++) {
+  for (let i = 0, j = Number(currentHour) + 1, k = 0; i < 24; i++) {
     if (j < 24) {
       next24Hours.push(today.hours[j])
       j++;
