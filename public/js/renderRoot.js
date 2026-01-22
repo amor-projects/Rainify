@@ -53,8 +53,7 @@ function renderSearchBar(){
   const searchBtn = document.createElement('button');
   searchBtn.type = 'button';
   searchBtn.className = 'search-btn btn';
-  const searchIcon = document.createElement('i');
-  searchIcon.className = 'fa-solid fa-paper-plane';
+  const searchIcon = createIcon('wi wi-direction-up')
   searchBtn.appendChild(searchIcon);
   searchBtn.addEventListener('click', () => {
     const search = document.querySelector('.search-input');
@@ -84,13 +83,11 @@ function renderToggle(){
   
   const lightBtn = document.createElement('button');
   lightBtn.type = 'button';
-  const sunIcon = document.createElement('i');
-  sunIcon.className = 'wi wi-day';
+  const sunIcon = createIcon('wi wi-day-sunny', 'light-toggle');
   lightBtn.appendChild(sunIcon);
   const darkBtn = document.createElement('button');
   darkBtn.type = 'button';
-  const moonIcon = document.createElement('i');
-  moonIcon.className = 'wi wi-night';
+  const moonIcon = createIcon('wi wi-night-clear', 'dark-toggle');
   darkBtn.appendChild(moonIcon);
   darkBtn.className = 'toggle btn';
   lightBtn.className = 'toggle btn';
