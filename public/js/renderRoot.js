@@ -1,6 +1,6 @@
-import { createButton, createContainer, createElement} from "./components.js";
+import { createButton, createContainer, createElement, createIcon} from "./components.js";
 import { renderDay} from "./renderDay.js";
-import { renderNextSixDays } from "./renderNext6Days.js";
+import { renderNext12Days } from "./renderNext6Days.js";
 import { currentLocation, weather} from "./utils.js";
 import {fetchWeather} from "./main.js";
 
@@ -10,8 +10,8 @@ function handleNavBtn(btn) {
     renderRoot('today', weather);
   } else if (btn.id == 'tomorrow-tab') {
     renderRoot('tomorrow', weather);
-  } else if (btn.id == 'next-6-days') {
-    renderRoot('next6Days', weather)
+  } else if (btn.id == 'next-12-days') {
+    renderRoot('next12Days', weather)
   }
 }
 
@@ -19,25 +19,24 @@ function handleNavBtn(btn) {
 function renderTabs(tab){
   const todayTab = createButton('Today', 'today-tab', 'nav-btn', handleNavBtn);
   const tomorrowTab = createButton('Tomorrow', 'tomorrow-tab', 'nav-btn', handleNavBtn);
-  const nextSixDaysTab = createButton('Next 6 Days', 'next-6-days', 'nav-btn', handleNavBtn);
+  const next12DaysTab = createButton('Next 12 Days', 'next-12-days', 'nav-btn', handleNavBtn);
   if (tab === 'tomorrow') {
     tomorrowTab.classList.add('active-tab');
-  } else if (tab === 'next6Days') {
-    nextSixDaysTab.classList.add('active-tab');
+  } else if (tab === 'next12Days') {
+    next12DaysTab.classList.add('active-tab');
   } else {
     todayTab.classList.add('active-tab');
   }
   const nav = document.getElementById('nav');
   nav.replaceChildren();
-  nav.append(todayTab, tomorrowTab, nextSixDaysTab);
+  nav.append(todayTab, tomorrowTab, next12DaysTab);
 }
 
 function renderLocation(currentLocation){
   const parent = document.querySelector('#location-container');
   const locationString = `${currentLocation.locality}`;
   const locationElem = createElement(locationString, 'xl bold');
-  const locationIcon = document.createElement('i');
-  locationIcon.className = 'fa-solid fa-map-marker';
+  const locationIcon = createIcon('wi wi-small-craft-advisory');
   if (!parent) {
     const locationContainer = createContainer('location-container', 'flex-row', locationElem, locationIcon);
     header.appendChild(locationContainer);
@@ -129,8 +128,8 @@ function renderRoot(tab, weather) {
     renderDay('today', weather.current, weather.today, weather.tomorrow);
   } else if (tab === 'tomorrow') {
     renderDay('tomorrow','','', weather.tomorrow);
-  } else if (tab === 'next6Days') {
-    renderNextSixDays(weather.next6Days);
+  } else if (tab === 'next12Days') {
+    renderNext12Days(weather.next12Days);
   } else {
     console.error("Invalid Tab option falling back to Today tab");
     renderDay(weather.current, weather.today);

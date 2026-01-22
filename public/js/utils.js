@@ -5,7 +5,7 @@ const weather = {
     this._current = data.currentConditions || '';
     this._today = data.days[0] || '';
     this._tomorrow = data.days[1] || '';
-    this._next6Days = data.days.slice(2, 8) || '';
+    this._next12Days = data.days.slice(2, 14) || '';
     this._location = {city: currentLocation.city} || {city: ''};
   },
   get current() {
@@ -17,8 +17,8 @@ const weather = {
   get tomorrow () {
     return this._tomorrow;
   },
-  get next6Days () {
-    return this._next6Days;
+  get next12Days () {
+    return this._next12Days;
   }
 }
 const units = {
