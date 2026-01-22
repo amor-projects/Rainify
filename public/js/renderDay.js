@@ -225,20 +225,20 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
 function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch, type) {
   let description = '';
   let icon = '';
-  if (sunsetEpoch - timeEpoch > 60) {
-    const [hour, minutes] = convertEpochTohourAndMin(sunsetEpoch - timeEpoch);
-    description = `Sun will set in ${hour} hr and ${minutes} min`;
-    icon = 'sunset';
-  } else if (sunsetEpoch - timeEpoch < 60 && sunsetEpoch - timeEpoch > 0) {
-    description = 'Sun is setting now';
-    icon = 'sunset';
-  } else if (sunriseEpoch - timeEpoch > 60) {
+  if (sunriseEpoch - timeEpoch > 60) {
     const [hour, minutes] = convertEpochTohourAndMin(sunriseEpoch - timeEpoch);
     description = `Sun will rise in ${hour} hr and ${minutes} min`;
     icon = 'sunrise';
   } else if (sunriseEpoch - timeEpoch < 60 && sunriseEpoch - timeEpoch > 0){
     description = 'Sun is rising now.';
     icon = 'sunrise';
+  } else if (sunsetEpoch - timeEpoch > 60) {
+    const [hour, minutes] = convertEpochTohourAndMin(sunsetEpoch - timeEpoch);
+    description = `Sun will set in ${hour} hr and ${minutes} min`;
+    icon = 'sunset';
+  } else if (sunsetEpoch - timeEpoch < 60 && sunsetEpoch - timeEpoch > 0) {
+    description = 'Sun is setting now';
+    icon = 'sunset';
   }
   console.log (convertEpochTohourAndMin(sunsetEpoch - timeEpoch), sunsetEpoch - timeEpoch);
   const parent = document.getElementById('Sun-rise-and-set-container');
@@ -325,7 +325,7 @@ function renderDay (type, current, today = null, tomorrow)  {
   const todayWindgust = today.windgust || 0;
   const sunrise = today.sunrise;
   const sunset = today.sunset;
-  const sunriseEpoch = tomorrow.sunriseEpoch;
+  const sunriseEpoch = today.sunriseEpoch;
   const sunsetEpoch = today.sunsetEpoch;
   let timeEpoch = Math.floor(Date.now() / 1000);
   console.log (timeEpoch);
