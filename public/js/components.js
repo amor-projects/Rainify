@@ -1,4 +1,4 @@
-import { MiToKm, toCelsius, units } from "./utils.js";
+import { MiToKm, toCelsius, units, getWeatherIcon, inchTomm} from "./utils.js";
 
 function createContainer (id, classNames, ...children) {
   const container = document.createElement('div');
@@ -17,16 +17,12 @@ function createElement(value, classNames) {
   return valueELem;
 };
 
-function createLabeledCard(label, value, classNames, description, child = null) {
+function createLabeledCard(label, icon, value, classNames, description, child = null) {
   const container = document.createElement('div');
   container.id = `${label}-card`;
   container.className = `${classNames} card flex-column`;
   const labelElem = createElement(label, 'medium');
-  const labelIcon = document.createElement('span');
-  labelIcon.id = `${label}-label-icon`;
-  labelIcon.className = 'icon';
-  labelIcon.dataset.icon = label;
-  const titleCard = createContainer(`${label}-title`, 'flex-row gray', labelIcon, labelElem);
+  const titleCard = createContainer(`${label}-title`, 'flex-row gray', icon, labelElem);
   const valueElem = createElement(value, `${label}-value large`);
   const descriptionElem = createElement(description, 'small');
   child ? container.append(titleCard, valueElem, child, descriptionElem) : container.append(titleCard, valueElem, descriptionElem);
@@ -45,29 +41,22 @@ function createAnHour (hour) {
     temp = toCelsius(temp);
   }
   temp = `${temp}${units.temp}`;
-  const cloudCover = `${hour.cloudcover}%`;
+  hour.precip = hour.precip || 0;
+  const precip = `${inchTomm(hour.precip)} mm`;
   let windspeed = hour.windspeed;
   const conditions = hour.conditions;
   if (units.temp == 'Km/h') {
     windspeed = MiToKm(windspeed);
   }
-  const conditionsIcon = document.createElement('span');
-  conditionsIcon.className = 'svg-icon hour-icon';
-  conditionsIcon.id = `${hour.datetime}-icon`;
-  conditionsIcon.dataset.icon = hour.icon;
-  const cloudIcon = document.createElement('span');
-  cloudIcon.className = 'svg-icon hour-icon';
-  cloudIcon.id = `${hour.datetime}-cloud-icon`;
-  cloudIcon.dataset.icon = 'cloudy';
-  const windIcon = document.createElement('span');
-  windIcon.className = 'svg-icon hour-icon';
-  windIcon.id = `${hour.datetime}-wind-icon`;
-  windIcon.dataset.icon = 'wind';
+  const preciptype = hour.preciptype !== null ? hour.preciptype[0] : 'rain';
+  const conditionsIcon = createIcon(`wi ${getWeatherIcon(hour.icon)}`);
+  const precipIcon = createIcon(`wi wi-${preciptype}`);
+  const windIcon = createIcon('wi wi-windy');
   const tempElem = createElement(temp, 'value' );
   const tempContainer = createContainer(`${hour.datetime}-temp-icon`, 'flex-row bold', conditionsIcon,  tempElem);
   const timeElem = createElement(time, 'bold large value');
-  const cloudCoverElem = createElement(cloudCover, 'value');
-  const cloudContainer = createContainer(`${hour.datetime}-cloud-container`, 'flex-row', cloudIcon, cloudCoverElem);
+  const precipElem = createElement(precip, 'value');
+  const precipContainer = createContainer(`${hour.datetime}-precip-container`, 'flex-row', precipIcon, precipElem);
   const conditionsElem = createElement(conditions, 'value');
   const windspeedElem = createElement(`${windspeed}${units.speed}`, 'value');
   const windContainer = createContainer(`${hour.datatime}-wind-container`, 'flex-row', windIcon, windspeedElem);
@@ -76,7 +65,7 @@ function createAnHour (hour) {
     'flex-column card', 
     timeElem, 
     tempContainer, 
-    cloudContainer,
+    precipContainer,
     windContainer, 
     conditionsElem
   );
@@ -91,11 +80,18 @@ function createButton(text, id,classNames, handleClick) {
   btn.onclick= (event) => handleClick(event.target);
   return btn;
 }
+function createIcon(iconClass, id) {
+  const icon = document.createElement('i');
+  icon.id = id;
+  icon.className = iconClass;
+  return icon;
+}
 export {
   createContainer, 
   createElement, 
   createLabeledElement, 
   createAnHour, 
   createButton,
-  createLabeledCard
+  createLabeledCard,
+  createIcon
 };

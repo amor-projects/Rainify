@@ -147,48 +147,29 @@ function createWindDescription(windspeed, winddir) {
   return `A ${match.adj} wind from the ${windDirection}; ${match.advice}`;
 }
 
-const iconMap = {
-  // Clear
-  "clear-day": "clear-day.svg",
-  "clear-night": "clear-night.svg",
-
-  // Partly cloudy
-  "partly-cloudy-day": "partly-cloudy-day.svg",
-  "partly-cloudy-night": "partly-cloudy-night.svg",
-
-  // Cloudy
-  "cloudy": "cloudy.svg",
-
-  // Rain & showers
-  "rain": "rain.svg",
-  "showers-day": "rain-day.svg",
-  "showers-night": "rain-night.svg",
-
-  // Thunder
-  "thunder-rain": "thunder.svg",
-  "thunder-showers-day": "thunder-day.svg",
-  "thunder-showers-night": "thunder-night.svg",
-
-  // Snow
-  "snow": "snow.svg",
-  "snow-showers-day": "snow-day.svg",
-  "snow-showers-night": "snow-night.svg",
-
-  // Atmosphere
-  "fog": "fog.svg",
-  "wind": "wind.svg",
-
-  // Ice things
-  "hail": "hail.svg",
-  "sleet": "sleet.svg"
+const iconMapping = {
+  "snow": "wi-snow",
+  "snow-showers-day": "wi-day-snow",
+  "snow-showers-night": "wi-night-snow",
+  "thunder-rain": "wi-thunderstorm",
+  "thunder-showers-day": "wi-day-storm-showers",
+  "thunder-showers-night": "wi-night-storm-showers",
+  "rain": "wi-rain",
+  "showers-day": "wi-day-showers",
+  "showers-night": "wi-night-showers",
+  "fog": "wi-fog",
+  "wind": "wi-strong-wind",
+  "cloudy": "wi-cloudy",
+  "partly-cloudy-day": "wi-day-cloudy",
+  "partly-cloudy-night": "wi-night-alt-cloudy",
+  "clear-day": "wi-day-sunny",
+  "clear-night": "wi-night-clear"
 };
 
-async function insertWeatherIcon(condition, id) {
-  const file = iconMap[condition] || 'cloudy.svg';
-  const response = await fetch(`../assets/weather/${file}`);
-  const svg = await response.text();
-  const elem = document.getElementById(id);
-  elem.innerHTML = svg;
+function getWeatherIcon(vcIcon) {
+  // Default to 'na' if the icon isn't in our list
+  const iconClass = iconMapping[vcIcon] || "wi-na";
+  return `wi ${iconClass}`;
 }
 
 function inchTomm(inch) {
@@ -210,7 +191,7 @@ export {
   createWindDescription, 
   findWindDirection, 
   getMoonphaseString,
-  insertWeatherIcon, 
+  getWeatherIcon, 
   inchTomm,
   convertEpochTohourAndMin
 };

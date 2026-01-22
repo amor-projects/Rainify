@@ -270,7 +270,7 @@ function renderSideBar(weather, tab) {
 function renderRoot(tab, weather) {
   renderHeader(currentLocation);
   renderTabs(tab);
-  renderSideBar(weather, tab);
+  // renderSideBar(weather, tab);
   if (tab === 'today') {
     renderDay('today', weather.current, weather.today, weather.tomorrow);
   } else if (tab === 'tomorrow') {

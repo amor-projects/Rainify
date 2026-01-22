@@ -1,5 +1,5 @@
 import { createContainer, createElement } from './components.js';
-import { insertWeatherIcon, units } from './utils.js';
+import {  units } from './utils.js';
 import { renderRainChart } from './renderRoot.js';
 
 function createOneDayCard(day) {

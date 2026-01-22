@@ -1,15 +1,9 @@
-import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard} from "./components.js";
-import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, insertWeatherIcon, inchTomm, convertEpochTohourAndMin } from "./utils.js";
+import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard, createIcon} from "./components.js";
+import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin } from "./utils.js";
 
 const main = document.querySelector('#main');
 
-function insertAllHourIcons() {
-  const hourIcons = document.querySelectorAll('.hour-icon');
-  hourIcons.forEach((icon) => {
-    insertWeatherIcon(icon.dataset.icon, icon.id);
-  });
-}
-function renderTempAndDescription(temp, condition, low, high){
+function renderTempAndDescription(temp, condition, icon, low, high){
   const parent = document.getElementById('temp-and-description')
 
   if (units.temp === '°C') {
@@ -20,12 +14,10 @@ function renderTempAndDescription(temp, condition, low, high){
   temp = `${temp}${units.temp}`;
   low = `${low}${units.temp}`;
   high = `${high}${units.temp}`;
-  condition = `Conditions are expected to be ${condition} throughout the day.`
-  const icon = document.createElement('span');
-  icon.id = 'temp-and-desc-icon';
-  icon.classList.add('svg-icon');
+  icon = getWeatherIcon(icon);
+  const weatherIcon = createIcon(`wi wi-${icon}`);
   const tempElement = createElement(temp, 'value');
-  const tempContainer = createContainer('temp-and-icon', 'flex-row xl bold',tempElement, icon);
+  const tempContainer = createContainer('temp-and-icon', 'flex-row xl bold',tempElement, weatherIcon);
   const lowElem = createLabeledElement('low-container', 'L: ', low);
   const highElem = createLabeledElement('high-container', 'H: ', high);
   const lowHigh = createContainer('low-high', 'small flex-column', lowElem, highElem);
@@ -54,7 +46,8 @@ function renderFeels(temp, feels){
   } else {
     feelsDescription = 'Similar to the actual temperature';
   }
-  const feelslike = createLabeledCard('Feels', feels, 'feels-like', feelsDescription);
+  const feelsIcon = createIcon('wi wi-thermometer', 'feels-icon');
+  const feelslike = createLabeledCard('Feels', feelsIcon, feels, 'feels-like', feelsDescription);
   if (!parent) {
     const feelsContainer = document.createElement('div');
     feelsContainer.id = 'Feels-container';
@@ -81,7 +74,8 @@ function renderPressure(pressure){
     description = 'Very high pressure. Very stable, dry, and cool conditions.';
   }
   pressure = `${pressure} ${units.pressure}`;
-  const pressureCard = createLabeledCard('Pressure', pressure, '', description);
+  const pressureIcon = createIcon('wi wi-barometer', 'pressure-icon');
+  const pressureCard = createLabeledCard('Pressure',pressureIcon, pressure, '', description);
   if (!parent) {
     const pressureContainer = createContainer('Pressure-container', '', pressureCard );
     main.appendChild(pressureContainer);
@@ -94,7 +88,8 @@ function renderPressure(pressure){
 function renderHumidityDew(humidity, dew) {
   const parent = document.getElementById('Humidity-container');
   const dewDescription = `The dew point is ${dew}${units.dew} right now.`;
-  const humidtyCard = createLabeledCard('Humidity', `${humidity}%`, '', dewDescription);
+  const humidityIcon = createIcon('wi wi-humidity', 'humidity-icon');
+  const humidtyCard = createLabeledCard('Humidity', humidityIcon, `${humidity}%`, '', dewDescription);
   if (!parent) {
     const humidtyContainer = createContainer('Humidity-container', '', humidtyCard);
     main.append(humidtyContainer);
@@ -114,7 +109,8 @@ function renderVisibility(visibility, reason) {
   reason === 'fog' ? reason = 'Fog' : reason ='Smoke';
   let description;
   visibility < limit ? description = `${reason} is affecting visiblity`: description = 'Visiblity is Normal';
-  const visibilityCard = createLabeledCard('Visiblity', visibility, '', description);
+  const visibilityIcon = createIcon('wi wi-fog', 'visibility-icon');
+  const visibilityCard = createLabeledCard('Visibility', visibilityIcon, `${visibility}${units.visibility}`, '', description);
   if (!parent) {
     const visibilityContainer = createContainer('Visiblity-container', '', visibilityCard);
     main.append(visibilityContainer);
@@ -151,7 +147,8 @@ function renderUvIndex (uvindex) {
     description = 'Extreme, Unprotected skin can burn in minutes';
   }
 
-  const uvCard = createLabeledCard('UV Index', uvindex, '', description, uvBar);
+  const uvIcon = createIcon('wi wi-day-sunny');
+  const uvCard = createLabeledCard('UV Index', uvIcon, uvindex, '', description, uvBar);
 
   if (!parent) {
     const uvIndexContainer = createContainer('Uv-index-container', '', uvCard);
@@ -177,8 +174,10 @@ function renderPrecip(precip = 0, next24HourPrecip, preciptype) {
   } else {
     description = `No ${preciptype} is expected in next 24h`
   }
-
-  const precipCard = createLabeledCard('Precipitation', precip, '', description);
+  let icon = 'rain';
+  if (preciptype && preciptype[0] === 'snow') icon = 'snow';
+  const precipIcon = createIcon(`wi wi-${icon}`);
+  const precipCard = createLabeledCard('Precipitation', precipIcon, precip, '', description);
 
   if (!parent) {
     const precipContainer = createContainer('Precipitation-container', '', precipCard);
@@ -203,9 +202,10 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   const windGustElem = createLabeledElement('wind-gust', 'Gusts', windgustWithUnits);
   const windDirElem = createLabeledElement('wind-dir', 'Direction', winddir);
   const windDescription = createWindDescription(windspeed, winddir);
-  const wind = createContainer('wind-container', 'flex-column', windGustElem, windDirElem);
+  const wind = createContainer('wind-container', '', windGustElem, windDirElem);
 
-  const windCard = createLabeledCard('Wind', windspeed, 'flex-row', windDescription, wind);
+  const windIcon = createIcon('wi wi-windy');
+  const windCard = createLabeledCard('Wind', windIcon, windspeed, '', windDescription, wind);
   if (!parent) {
     const windStatus = createContainer('Wind-status-container', 'flex-column card', windCard);
     main.append(windStatus);
@@ -217,23 +217,29 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
 
 function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch) {
   let description = '';
+  let icon = '';
   if (sunriseEpoch - timeEpoch > 60) {
     const [hour, minutes] = convertEpochTohourAndMin(sunriseEpoch - timeEpoch);
     description = `Sun will rise in ${hour} hr and ${minutes} min`;
+    icon = 'sunrise';
   } else if (sunriseEpoch - timeEpoch < 60 && sunriseEpoch - timeEpoch > 0){
     description = 'Sun is rising now.';
+    icon = 'sunrise';
   } else if (sunsetEpoch - timeEpoch > 60) {
     const [hour, minutes] = convertEpochTohourAndMin(sunsetEpoch - timeEpoch);
     description = `Sun will set in ${hour} hr and ${minutes} min`;
+    icon = 'sunset';
   } else if (sunsetEpoch - timeEpoch < 60 && sunsetEpoch - timeEpoch > 0) {
-    description = 'Sun is setting now'
+    description = 'Sun is setting now';
+    icon = 'sunset';
   }
   console.log (convertEpochTohourAndMin(sunsetEpoch - timeEpoch), sunsetEpoch - timeEpoch);
   const parent = document.getElementById('Sun-rise-and-set-container');
   const sunriseElem = createLabeledElement('', 'Rise', sunrise  );
   const sunsetElem = createLabeledElement('', 'Set', sunset);
   const sunRiseAndSet = createContainer('sun-rise-and-set', '', sunriseElem, sunsetElem);
-  const sunCard = createLabeledCard('Sun', '', '', description,sunRiseAndSet );
+  const sunIcon = createIcon(`wi wi-${icon}`);
+  const sunCard = createLabeledCard('Sun', sunIcon, '', '', description,sunRiseAndSet );
   if (!parent) {
     const sunStatus = createContainer('Sun-rise-and-set-container', 'flex-column card',sunCard);
     main.append(sunStatus);
@@ -283,7 +289,7 @@ function renderDay (type, current, today = null, tomorrow)  {
   main.replaceChildren();
   main.classList.remove('days-view');
   const temp = current.temp;
-  const condition = today.conditions;
+  const condition = today.description;
   const low = today.tempmin;
   const high = today.tempmax;
   const feels = current.feelslike;
@@ -317,12 +323,12 @@ function renderDay (type, current, today = null, tomorrow)  {
   }
   
   // DOM Elements
-  renderTempAndDescription(temp, condition, low, high);
+  renderTempAndDescription(temp, condition, icon, low, high);
   renderFeels(temp, feels);
+  renderPressure(pressure);
   renderHumidityDew(humidity, dew);
   renderVisibility(visibility, icon);
   renderUvIndex(uvindex);
-  renderPressure(pressure);
   renderPrecip(precip, tomorrowPrecip, preciptype)
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir, todayWindgust);
   renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch);
@@ -330,11 +336,9 @@ function renderDay (type, current, today = null, tomorrow)  {
     timeEpoch += 10;
     renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch);
   }, 10000);
-  const nextHours = createElement('Next Hours', 'large next-hours-title');
-  main.append(nextHours);
+  // const nextHours = createElement('Next Hours', 'large next-hours-title');
+  // main.append(nextHours);
   renderNextHours(hours, String(currentHour));
-  insertWeatherIcon(icon, 'temp-and-desc-icon');
-  insertAllHourIcons();
 }
 
 export {renderDay};
