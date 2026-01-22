@@ -1,6 +1,6 @@
 import { createButton, createContainer, createElement, createIcon} from "./components.js";
 import { renderDay} from "./renderDay.js";
-import { renderNext12Days } from "./renderNext6Days.js";
+import { renderNext12Days } from "./renderNext12Days.js";
 import { currentLocation, weather} from "./utils.js";
 import {fetchWeather} from "./main.js";
 

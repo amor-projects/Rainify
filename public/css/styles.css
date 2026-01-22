@@ -4,17 +4,18 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Comforta';
 }
 #root {
   width: 90%;
   height: auto;
-  background-color: whitesmoke;
+  background-color: rgb(240, 245, 255);
   margin: 0 5%;
   padding: 1rem;
   border-radius: 1rem;
 }
 .card {
-  background-color: rgb(222, 248, 255);
+  background-color: white;
   height: 100%;
   border-radius: 1rem;
   padding: 0.5rem;
@@ -52,8 +53,8 @@ body {
   width: fit-content;
   padding: 0.5rem 1rem;
 }
-.fa-map-marker {
-  margin: auto;
+.wi-small-craft-advisory {
+  margin-left: 0.5rem;
 }
 .btn, .search-input {
   background-color: rgb(222, 248, 255);
@@ -101,16 +102,27 @@ body {
 .gray {
   opacity: 0.7;
 }
+.dark-gray {
+  opacity: 0.85;
+}
 .hours-btn {
   font: inherit;
   padding: 0.2rem 0.5rem;
   font-size: 1.3rem;
-  margin: 0.5rem;
   border: none;
-  border-radius: 50%;
-  background-color: azure;
+  height: 100%;
+  border-radius: 0.5rem;
 }
-[id$='00-hour'] {
+.hours-btn.prev {
+  background: linear-gradient(to right, rgba(0, 0, 0,0), rgba(128, 128, 128, 0.1));
+}
+.hours-btn.next {
+  background: linear-gradient(to right, rgba(128, 128, 128, 0.1), rgba(0, 0, 0, 0));
+}
+#hours-container {
+  margin: 2px 4px;
+}
+#hours-container > [id$='00-hour'] {
   min-width: 100px;
   min-height: 70px;
   font-size: 0.8em;

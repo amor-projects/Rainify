@@ -36,8 +36,7 @@
   align-items: center;
 }
 #main.days-view {
-  display: grid;
-  grid-template: repeat(2, 1fr) / repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(calc(100px + 12vw), 1fr));
 }
 @media screen  and (width < 880px){
   #temp-and-description {
