@@ -1,4 +1,4 @@
-import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard, createIcon} from "./components.js";
+import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard, createIcon, createButton} from "./components.js";
 import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin, getNext24Hours, getNext24HoursPrecip } from "./utils.js";
 
 const main = document.querySelector('#main');
@@ -250,17 +250,38 @@ function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpo
   
 }
 function renderNextHours(hours){
-  const parent = document.getElementById('next-hours');
+  const cardSize = 320;
+  const parent = document.getElementById('hours-carousel');
+  const prevButton = document.createElement('button');
+  const prevIcon = createIcon('wi wi-direction-left', 'prev-icon');
+  prevButton.type = 'button';
+  prevButton.className = 'hours-btn prev';
+  prevButton.append(prevIcon);
+  const nextButton = document.createElement('button');
+  const nextIcon = createIcon('wi wi-direction-right', 'next-icon');
+  nextButton.className = 'hours-btn next';
+  nextButton.append(nextIcon);
   const nextHoursDom = [];
   for (const hour of hours) {
     nextHoursDom.push(createAnHour(hour));
   }
+  const hoursContainer = createContainer('hours-container', 'flex-row', ...nextHoursDom );
+  prevButton.addEventListener('click', () => {
+    hoursContainer.scrollBy({left: -cardSize, behavior: "smooth"})
+  })
+  nextButton.addEventListener('click', () => {
+    hoursContainer.scrollBy({left: cardSize, behavior: "smooth"});
+  })
   if (!parent) {
-    const nextHours = createContainer('next-hours', 'flex-row', ...nextHoursDom);
+    const nextHours = createContainer('hours-carousel', 'flex-row', prevButton, hoursContainer, nextButton);
+    nextHours.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') prevButton.click();
+      if (e.key === 'ArrowRight') nextButton.click();
+    })
     main.appendChild(nextHours);
   } else {
     parent.replaceChildren();
-    parent.append(...nextHoursDom);
+    parent.append(prevButton, hoursContainer, nextButton);
   }
  
 }

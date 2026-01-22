@@ -35,3 +35,25 @@
   transform: translate(-50%, -50%);
   transition: left 0.5s ease-out;
 }
+
+#hours-carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#hours-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-stop: x mandatory;
+  scrollbar-width: none;
+}
+#hours-container::-webkit-scrollbar {
+  display: none;
+}
+#hours-container > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
