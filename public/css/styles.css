@@ -1,5 +1,5 @@
 body {
-  font-size: calc((0.8rem + 1.1vw) / 2);
+  font-size: calc(0.8rem + 0.4vw);
   min-height: 99vh;
   display: flex;
   justify-content: center;
@@ -38,7 +38,7 @@ body {
 }
 
 .large {
-  font-size: calc((2.5rem + 1.6vw) / 2);
+  font-size: calc((1.2rem + 2vw) / 2);
 }
 .xl {
   font-size: calc((3.5rem + 2vw) / 2);
@@ -109,4 +109,20 @@ body {
   border: none;
   border-radius: 50%;
   background-color: azure;
+}
+[id$='00-hour'] {
+  min-width: 100px;
+  min-height: 70px;
+  font-size: 0.8em;
+  gap: 0.5rem;
+}
+#low-high > *{
+  justify-content: flex-start;
+  gap: 1rem;
+}
+.small {
+  font-size: 0.8em;
+}
+#main > [id$='-container'] {
+  min-height: 80px;
 }
