@@ -1,5 +1,5 @@
 import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard, createIcon, createButton} from "./components.js";
-import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin, getNext24Hours, getNext24HoursPrecip } from "./utils.js";
+import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin, getNext24Hours, getNext24HoursPrecip, getMoonphaseString } from "./utils.js";
 
 const main = document.querySelector('#main');
 
@@ -218,20 +218,20 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
 function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch) {
   let description = '';
   let icon = '';
-  if (sunriseEpoch - timeEpoch > 60) {
-    const [hour, minutes] = convertEpochTohourAndMin(sunriseEpoch - timeEpoch);
-    description = `Sun will rise in ${hour} hr and ${minutes} min`;
-    icon = 'sunrise';
-  } else if (sunriseEpoch - timeEpoch < 60 && sunriseEpoch - timeEpoch > 0){
-    description = 'Sun is rising now.';
-    icon = 'sunrise';
-  } else if (sunsetEpoch - timeEpoch > 60) {
+  if (sunsetEpoch - timeEpoch > 60) {
     const [hour, minutes] = convertEpochTohourAndMin(sunsetEpoch - timeEpoch);
     description = `Sun will set in ${hour} hr and ${minutes} min`;
     icon = 'sunset';
   } else if (sunsetEpoch - timeEpoch < 60 && sunsetEpoch - timeEpoch > 0) {
     description = 'Sun is setting now';
     icon = 'sunset';
+  } else if (sunriseEpoch - timeEpoch > 60) {
+    const [hour, minutes] = convertEpochTohourAndMin(sunriseEpoch - timeEpoch);
+    description = `Sun will rise in ${hour} hr and ${minutes} min`;
+    icon = 'sunrise';
+  } else if (sunriseEpoch - timeEpoch < 60 && sunriseEpoch - timeEpoch > 0){
+    description = 'Sun is rising now.';
+    icon = 'sunrise';
   }
   console.log (convertEpochTohourAndMin(sunsetEpoch - timeEpoch), sunsetEpoch - timeEpoch);
   const parent = document.getElementById('Sun-rise-and-set-container');
@@ -247,6 +247,10 @@ function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpo
     parent.replaceChildren();
     parent.append(sunCard);
   }
+}
+
+function renderMoonPhase(moonphaseDegree) {
+  const moonphaseValue = createElement(getMoonphaseString(moonphaseDegree), 'moonphase-value');
   
 }
 function renderNextHours(hours){
@@ -314,7 +318,7 @@ function renderDay (type, current, today = null, tomorrow)  {
   const todayWindgust = today.windgust || 0;
   const sunrise = today.sunrise;
   const sunset = today.sunset;
-  const sunriseEpoch = today.sunriseEpoch;
+  const sunriseEpoch = tomorrow.sunriseEpoch;
   const sunsetEpoch = today.sunsetEpoch;
   let timeEpoch = Math.floor(Date.now() / 1000);
   console.log (timeEpoch);
@@ -324,7 +328,9 @@ function renderDay (type, current, today = null, tomorrow)  {
     currentHour = date.getHours();
     if (currentHour < 10) currentHour = `0${currentHour}`;
   }
-  const next24Hours = getNext24Hours(today, tomorrow, currentHour);
+  let next24Hours;
+  if (type === 'today') next24Hours = getNext24Hours(today, tomorrow, currentHour);
+  else next24Hours = getNext24Hours(tomorrow, '', -1); // use -1 because j + 1 is handling index;
   const next24HoursPrecip = getNext24HoursPrecip(next24Hours);
   // DOM Elements
   renderTempAndDescription(temp, condition, icon, low, high);
@@ -336,12 +342,6 @@ function renderDay (type, current, today = null, tomorrow)  {
   renderPrecip(precip, next24HoursPrecip, preciptype)
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir, todayWindgust);
   renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch);
-  setInterval(() => {
-    timeEpoch += 10;
-    renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch);
-  }, 10000);
-  // const nextHours = createElement('Next Hours', 'large next-hours-title');
-  // main.append(nextHours);
   renderNextHours(next24Hours);
 }
 

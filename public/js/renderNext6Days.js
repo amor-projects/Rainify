@@ -1,6 +1,5 @@
 import { createContainer, createElement } from './components.js';
 import {  units } from './utils.js';
-import { renderRainChart } from './renderRoot.js';
 
 function createOneDayCard(day) {
   const date = createElement(day.datetime, 'date-time-day large bold');
@@ -48,12 +47,6 @@ function createOneDayCard(day) {
   return oneDay;
 }
 
-function insertAllDaysIcons() {
-  const allDaysCard = document.querySelectorAll('.day-icon');
-  allDaysCard.forEach((dayIcon) => {
-    insertWeatherIcon(dayIcon.dataset.icon, dayIcon.id);
-  })
-}
 function renderNextSixDays(days) {
   const main = document.querySelector('#main');
   main.replaceChildren();
@@ -66,8 +59,6 @@ function renderNextSixDays(days) {
   if (rainChart) {
     rainChart.remove();
   };
-  renderRainChart(days, '', '', 'next6Days');
-  insertAllDaysIcons();
 }
 
 export {renderNextSixDays}

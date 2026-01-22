@@ -1,10 +1,9 @@
-import { createButton, createContainer, createElement, createLabeledElement } from "./components.js";
+import { createButton, createContainer, createElement} from "./components.js";
 import { renderDay} from "./renderDay.js";
 import { renderNextSixDays } from "./renderNext6Days.js";
-import { currentLocation, getMoonphaseString, weather} from "./utils.js";
+import { currentLocation, weather} from "./utils.js";
 import {fetchWeather} from "./main.js";
 
-const sidbar = document.querySelector('#sidebar');
 const header = document.querySelector('#header');
 function handleNavBtn(btn) {
   if (btn.id == 'today-tab') {
@@ -16,134 +15,6 @@ function handleNavBtn(btn) {
   }
 }
 
-function renderDateTimeAndSun(date, sunrise, sunset){
-  const parent = document.querySelector('#date-time-sun');
-  const dateElem = createElement(date, 'bold');
-  const today = new Date;
-  const hours = today.getHours();
-  const minutes = today.getMinutes();
-  const seconds = today.getSeconds();
-  const timeString = `${hours}:${minutes}:${seconds}`;
-  const sunriseElem = createLabeledElement('sunrise', 'Sunrise', sunrise);
-  const sunsetElem = createLabeledElement('sunset', 'Sunset', sunset);
-  const timeElem = createElement(timeString, 'time-box');
-  if (!parent) {
-    const dateTimeSun = createContainer('date-time-sun', 'flex-column card', dateElem, timeElem, sunriseElem, sunsetElem);
-    sidbar.appendChild(dateTimeSun);
-  } else {
-    parent.replaceChildren();
-    parent.append(dateElem, timeElem, sunriseElem, sunsetElem);
-  }
-}
-
-function renderRainChart(day, hours, currentTime, tab){
-let upcomingChances = [];
-if (tab === 'next6Days') {
-  upcomingChances = day.slice(0, 7);
-} else {
-  const currentHour = Number(currentTime.slice(0,2));
-  for (const hour of hours) {
-    const time = Number(hour.datetime.slice(0, 2));
-    if (time >= currentHour) {
-      upcomingChances.push(hour);
-    }
-  }
-}
-const length = upcomingChances.length;
-if (length > 7 && tab !== 'next6Days') {
-  upcomingChances.splice(7);
-} else if (length < 7 && tab !== 'next6Days')  {
-  upcomingChances = hours.slice(17, 24);
-}
-
-const labels = [];
-const dataset = [];
-if (tab === 'next6Days') {
-  for (const day of upcomingChances) {
-    labels.push(day.datetime.slice(8));
-    const precipProb = day.precipprob !== null ? day.precipprob : 'UNAVAIL';
-    dataset.push(precipProb);
-  }
-} else {
-  for (const hour of upcomingChances) {
-    labels.push(hour.datetime.slice(0, 2));
-    const precipProb = hour.precipprob !== null ? hour.precipprob : 'UNAVAIL';
-    dataset.push(precipProb);
-  }
-}
-
-const div = document.createElement('div');
-const canva = document.createElement('canvas');
-canva.width = '100%';
-div.id = 'rain-chart';
-div.className = 'card';
-const ctx = canva.getContext('2d');
-
-new Chart(ctx, {
-  type: 'bar',
-  data: {
-  // Your X-Axis Keys
-  labels: labels,
-  datasets: [{
-    label: 'Rain Chances',
-    // Replace these with your 7 actual values
-    data: dataset,
-    backgroundColor: 'rgb(0, 100, 166)',
-    borderColor: 'rgba(54, 162, 235, 1)',
-    borderWidth: 1
-  }]
-  },
-  options: {
-  scales: {
-  y: {
-    beginAtZero: true,
-    // Force the scale to max 100
-    max: 100 
-    }
-  },
-  responsive: true,
-  plugins: {
-    legend: {
-      display: true,
-      position: 'top',
-      }
-    }
-  }
-  });
-  div.append(canva);
-  sidbar.append(div);
-
-}
-
-function renderLunarClanendar(moonphase){
-  const parent = document.querySelector('#lunar-calendars');
-  const date = new Date
-  const islamicDate = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  }).format(date);
-
-  const chineseDate = new Intl.DateTimeFormat('zh-u-ca-chinese', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  }).format(date);
-
-  const moonphaseValue = getMoonphaseString(moonphase);
-  const moonphaseElem = createElement(moonphaseValue, 'value')
-  const isalmicElem = createElement(islamicDate, 'islamic-date value');
-  const chineseElem = createElement(chineseDate, 'chinese-date value');
-
-  if (!parent) {
-    const lunar = createContainer('lunar-calendars', 'flex-column card', moonphaseElem, isalmicElem, chineseElem);
-    sidbar.append(lunar);
-  } else {
-    parent.replaceChildren();
-    parent.append(moonphaseElem, isalmicElem, chineseElem);
-  }
-    
-}
 
 function renderTabs(tab){
   const todayTab = createButton('Today', 'today-tab', 'nav-btn', handleNavBtn);
@@ -215,12 +86,12 @@ function renderToggle(){
   const lightBtn = document.createElement('button');
   lightBtn.type = 'button';
   const sunIcon = document.createElement('i');
-  sunIcon.className = 'fa-solid fa-sun';
+  sunIcon.className = 'wi wi-day';
   lightBtn.appendChild(sunIcon);
   const darkBtn = document.createElement('button');
   darkBtn.type = 'button';
   const moonIcon = document.createElement('i');
-  moonIcon.className = 'fa-solid fa-moon';
+  moonIcon.className = 'wi wi-night';
   darkBtn.appendChild(moonIcon);
   darkBtn.className = 'toggle btn';
   lightBtn.className = 'toggle btn';
@@ -248,29 +119,12 @@ function renderHeader(currentLocation){
     const profile = createContainer('profile', 'profile-pic', img);
     header.append(profile);
   }
-  
-  // Other stuff like profile button
 };
 
-function renderSideBar(weather, tab) {
-  renderDateTimeAndSun(weather.today.datetime, weather.today.sunrise, weather.today.sunset);
-  setInterval(()=> {
-    renderDateTimeAndSun(weather.today.datetime, weather.today.sunrise, weather.today.sunset);
-  }, 1000);
-  if (tab === 'next6Days') {
-      renderRainChart(weather.next6Days, '', '', tab);
-  } else if (tab === 'tomorrow') {
-      renderRainChart(weather.tomorrow, weather.tomorrow.hours, weather.tomorrow.hours[0].datetime, tab);
-  } else {
-      renderRainChart(weather.today, weather.today.hours,weather.current.datetime, tab );
-  }
-  renderLunarClanendar(weather.current.moonphase);
-}
 
 function renderRoot(tab, weather) {
   renderHeader(currentLocation);
   renderTabs(tab);
-  // renderSideBar(weather, tab);
   if (tab === 'today') {
     renderDay('today', weather.current, weather.today, weather.tomorrow);
   } else if (tab === 'tomorrow') {
@@ -283,4 +137,4 @@ function renderRoot(tab, weather) {
   }
 }
 
-export {renderRoot, renderRainChart};
+export {renderRoot};
