@@ -1,5 +1,5 @@
 import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard, createIcon} from "./components.js";
-import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin } from "./utils.js";
+import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin, getNext24Hours, getNext24HoursPrecip } from "./utils.js";
 
 const main = document.querySelector('#main');
 
@@ -170,7 +170,7 @@ function renderPrecip(precip = 0, next24HourPrecip, preciptype) {
   } else if (next24HourPrecip > 0) {
     let intensity = "";
     next24HourPrecip < 10 ? intensity = 'Light' : intensity = 'Heavy';
-    description = `${intensity} ${preciptype} expected. Total of ${next24HourPrecip}mm in the next 24 hours`;
+    description = `${intensity} ${preciptype} expected. Total of ${next24HourPrecip} mm in the next 24 hours`;
   } else {
     description = `No ${preciptype} is expected in next 24h`
   }
@@ -205,7 +205,7 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   const wind = createContainer('wind-container', '', windGustElem, windDirElem);
 
   const windIcon = createIcon('wi wi-windy');
-  const windCard = createLabeledCard('Wind', windIcon, windspeed, '', windDescription, wind);
+  const windCard = createLabeledCard('Wind', windIcon, windspeedWithUnits, '', windDescription, wind);
   if (!parent) {
     const windStatus = createContainer('Wind-status-container', 'flex-column card', windCard);
     main.append(windStatus);
@@ -249,35 +249,20 @@ function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpo
   }
   
 }
-function renderNextHours(hours, currentTime){
+function renderNextHours(hours){
   const parent = document.getElementById('next-hours');
-  const currentHour = Number(currentTime.slice(0, 2));
-  const upcomingHoursDom = [];
-  let upcomingHours = [];
+  const nextHoursDom = [];
   for (const hour of hours) {
-    const time = Number(hour.datetime.slice(0, 2));
-    if (time >= currentHour) {
-      upcomingHours.push(hour);
-    }
-  }
-  const length = upcomingHours.length;
-  if (length > 6) {
-    upcomingHours.splice(6,);
-  } else  {
-    upcomingHours = hours.slice(18, 24);
+    nextHoursDom.push(createAnHour(hour));
   }
   if (!parent) {
-    for (const hour of upcomingHours) {
-      const hourElem = createAnHour(hour);
-      upcomingHoursDom.push(hourElem);
-    }
-    const nextHours = createContainer('next-hours', 'flex-row', ...upcomingHoursDom);
+    const nextHours = createContainer('next-hours', 'flex-row', ...nextHoursDom);
     main.appendChild(nextHours);
-    return 1;
+  } else {
+    parent.replaceChildren();
+    parent.append(...nextHoursDom);
   }
-  parent.replaceChildren();
-  parent.append(...upcomingHoursDom);
-  return 0;
+ 
 }
 
 function renderDay (type, current, today = null, tomorrow)  {
@@ -298,15 +283,12 @@ function renderDay (type, current, today = null, tomorrow)  {
   const pressure = current.pressure !== null ? current.pressure : today.pressure;
   const visibility = current.visibility !== null ? current.visibility : today.visibility;
   const uvindex = current.uvindex || 0;
-  const cloudCover = current.cloudcover !== null ? current.cloudcover : today.cloudcover;
   const currentWindspeed = current.windspeed;
   const currentWinddir = current.winddir;
   const todayWindspeed = today.windspeed;
   const todayWinddir = today.winddir;
-  const hours = today.hours;
   const icon = current.icon;
   const precip = current.precip;
-  const tomorrowPrecip = tomorrow.precip;
   const preciptype = today.preciptype ? today.preciptype[0] : 'rain';
   const todayWindgust = today.windgust || 0;
   const sunrise = today.sunrise;
@@ -321,7 +303,8 @@ function renderDay (type, current, today = null, tomorrow)  {
     currentHour = date.getHours();
     if (currentHour < 10) currentHour = `0${currentHour}`;
   }
-  
+  const next24Hours = getNext24Hours(today, tomorrow, currentHour);
+  const next24HoursPrecip = getNext24HoursPrecip(next24Hours);
   // DOM Elements
   renderTempAndDescription(temp, condition, icon, low, high);
   renderFeels(temp, feels);
@@ -329,7 +312,7 @@ function renderDay (type, current, today = null, tomorrow)  {
   renderHumidityDew(humidity, dew);
   renderVisibility(visibility, icon);
   renderUvIndex(uvindex);
-  renderPrecip(precip, tomorrowPrecip, preciptype)
+  renderPrecip(precip, next24HoursPrecip, preciptype)
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir, todayWindgust);
   renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch);
   setInterval(() => {
@@ -338,7 +321,7 @@ function renderDay (type, current, today = null, tomorrow)  {
   }, 10000);
   // const nextHours = createElement('Next Hours', 'large next-hours-title');
   // main.append(nextHours);
-  renderNextHours(hours, String(currentHour));
+  renderNextHours(next24Hours);
 }
 
 export {renderDay};

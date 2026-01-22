@@ -182,6 +182,27 @@ function convertEpochTohourAndMin(epoch) {
   time[1] = Math.trunc((epoch - time[0] * 3600) / 60);
   return time;
 }
+function getNext24Hours(today, tomorrow, currentHour ) {
+  const next24Hours = [];
+  for (let i = 0, j = currentHour + 1, k = 0; i < 24; i++) {
+    if (j < 24) {
+      next24Hours.push(today.hours[j])
+      j++;
+    } else {
+      next24Hours.push(tomorrow.hours[k]);
+      k++;
+    }
+  }
+  console.log(next24Hours);
+  return next24Hours;
+}
+function getNext24HoursPrecip(next24Hours) {
+  let totalPrecip = 0;
+  for (const hour of next24Hours) {
+    totalPrecip += hour.precip;
+  }
+  return totalPrecip;
+}
 export {
   currentLocation, 
   units, 
@@ -193,5 +214,7 @@ export {
   getMoonphaseString,
   getWeatherIcon, 
   inchTomm,
-  convertEpochTohourAndMin
+  convertEpochTohourAndMin, 
+  getNext24Hours,
+  getNext24HoursPrecip
 };
