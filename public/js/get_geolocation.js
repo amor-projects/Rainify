@@ -27,8 +27,8 @@ const successLocation = async (position) => {
 const failureLocation = (error) => {
   console.error(`Failed to get Location due to ${error.message}`)
   console.log("Falling back to default Location");
-  currentLocation.locality = 'Multan';
-  currentLocation.countryName = 'Pakistan';
+  currentLocation.locality = 'London';
+  currentLocation.countryName = 'England';
   return currentLocation;
 }
 
@@ -38,14 +38,12 @@ const options = {
   maximumAge: 0
 };
 
-function getGeoLocation () {
+async function getGeoLocation () {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(successLocation, failureLocation, options);
-    return true;
   } else {
     alert ("Geolocation is not supported in your browser!")
   }
-  return false;
 }
 
 export default getGeoLocation;

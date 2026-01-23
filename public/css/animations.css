@@ -90,3 +90,9 @@ body {
 .profile-pic{
   cursor: pointer;
 }
+#root {
+  transition: opacity 0.5s ease-in-out;
+}
+#root.fade-out-slow {
+  opacity: 0;
+}
