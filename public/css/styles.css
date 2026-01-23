@@ -130,7 +130,7 @@ body.dark-theme {
   background: linear-gradient(to right, rgba(128, 128, 128, 0.1), rgba(0, 0, 0, 0));
 }
 #hours-container {
-  padding: 2px 4px;
+  padding: 6px 8px;
 }
 #hours-container > [id$='00-hour'] {
   min-width: 125px;
@@ -153,7 +153,7 @@ body.dark-theme {
 }
 #main.days-view .wi{
   font-size: 1.8rem ;
-  color: rgb(137, 185, 41);
+  color: orange;
 }
 #temp-and-description .wi {
   margin: 1rem 1rem 0 0;

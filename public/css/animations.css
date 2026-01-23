@@ -57,3 +57,17 @@
   scroll-snap-align: start;
   flex-shrink: 0;
 }
+#main {
+  perspective: 1500px;
+}
+[id$='-container'] {
+  perspective: 500px;
+}
+.card {
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 1px 1px 5px rgba(128, 128, 128, 0.3);
+}
+.card:hover, #temp-and-description:hover{
+  transform: translateZ(12px);
+  transition: transform 0.3s ease-in-out;
+}
