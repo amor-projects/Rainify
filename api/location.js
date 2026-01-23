@@ -1,5 +1,5 @@
 const BDC_API_ENDPOINT = "https://api-bdc.net/data/reverse-geocode";
-const BDC_API_KEY = "bdc_eee7dc036a1b45d98accaf1f2a270fe9";
+const BDC_API_KEY = process.env.BDC_API_KEY;
 
 async function getLocation(coords) {
   const location = {ok: false, name: null, countryName: null};
