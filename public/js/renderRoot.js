@@ -92,19 +92,17 @@ function renderSearchBar(){
     }
   });
   searchInput.addEventListener('keydown', (event) => {
-    setTimeout(() => {
-      console.log('Waiting');
-    }, 100);
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      searchBtn.click();
+      return;
+    }
     getSearchSuggestions(event.target.value)
       .then((suggestions) => renderSearchSuggestionBox(suggestions))
       .catch((error) => {
         renderSearchSuggestionBox(['Nothing Here']);
         console.error(error.message);
       });
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      searchBtn.click();
-    }
   });
   const searchBar = createContainer('search-bar', 'search-bar flex-row', searchInput, searchBtn);
   if (!parent) {
