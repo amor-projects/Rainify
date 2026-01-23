@@ -1,7 +1,7 @@
-import { createButton, createContainer, createElement, createIcon} from "./components.js";
+import { createButton, createContainer, createElement, createIcon, createSearchSuggestionBox} from "./components.js";
 import { renderDay} from "./renderDay.js";
 import { renderNext12Days } from "./renderNext12Days.js";
-import { currentLocation, weather} from "./utils.js";
+import { currentLocation, weather, getSearchSuggestions} from "./utils.js";
 import {fetchWeather} from "./main.js";
 
 const body = document.querySelector('body');
@@ -35,7 +35,7 @@ function renderTabs(tab){
 function renderLocation(currentLocation){
   const parent = document.querySelector('#location-container');
   const locationString = `${currentLocation.locality}`;
-  const locationElem = createElement(locationString, 'xl bold');
+  const locationElem = createElement(locationString, 'large bold');
   const locationIcon = createIcon('wi wi-small-craft-advisory');
   if (!parent) {
     const locationContainer = createContainer('location-container', 'flex-row', locationElem, locationIcon);
@@ -44,9 +44,19 @@ function renderLocation(currentLocation){
     parent.replaceChildren();
     parent.append(locationElem, locationIcon);
   }
-};
+}
+
+function renderSearchSuggestionBox(searchSuggestions) {
+  const searchSuggestionsDom = createSearchSuggestionBox(searchSuggestions);
+  const searchBox = document.getElementById('search-box');
+  searchBox.replaceChildren();
+  searchBox.append(searchSuggestionsDom);
+}
+
 function renderSearchBar(){
-  const parent = document.querySelector('#search-bar');
+  const parent = document.querySelector('#search');
+  const searchBox = document.createElement('div');
+  searchBox.id = 'search-box';
   const searchInput = document.createElement('input');
   searchInput.type = 'search';
   searchInput.className = 'search-input ';
@@ -59,23 +69,31 @@ function renderSearchBar(){
     const search = document.querySelector('.search-input');
     const value = search.value;
     if (value && value != currentLocation.locality) {
+      searchBox.replaceChildren();
       currentLocation.locality = value;
       currentLocation.countryName = "";
       fetchWeather(currentLocation.locality);
     }
   });
   searchInput.addEventListener('keydown', (event) => {
+    getSearchSuggestions(event.target.value)
+      .then((suggestions) => renderSearchSuggestionBox(suggestions))
+      .catch((error) => {
+        renderSearchSuggestionBox(['Nothing Here']);
+        console.error(error.message);
+      });
     if (event.key === 'Enter') {
       event.preventDefault();
       searchBtn.click();
     }
   });
-  if (!parent) {
   const searchBar = createContainer('search-bar', 'search-bar flex-row', searchInput, searchBtn);
-  header.appendChild(searchBar);
+  if (!parent) {
+  const search = createContainer('search', 'search flex-column', searchBar, searchBox);
+  header.appendChild(search);
   } else {
     parent.replaceChildren();
-    parent.append(searchInput, searchBtn);
+    parent.append(searchBar, searchBox);
   }
 }
 function renderToggle(){

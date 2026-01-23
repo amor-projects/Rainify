@@ -110,7 +110,7 @@ body.dark-theme {
   background-color: rgba(128, 128, 128, 0.1) ;
 }
 .gray, .wi {
-  opacity: 0.7;
+  color: rgba(128, 128, 128);
 }
 .dark-gray {
   opacity: 0.85;
@@ -161,4 +161,15 @@ body.dark-theme {
 #temp-and-description .wi {
   margin: 1rem 1rem 0 0;
   font-size: 1.3em;
+}
+#search-suggestion-box {
+  background-color: rgba(128, 128, 128, 0.3);
+  backdrop-filter: blur(4px);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.suggestion {
+  font-weight: 700;
+  background: none;
+  text-align: left;
 }

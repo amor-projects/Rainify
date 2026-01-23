@@ -48,3 +48,18 @@
     display: none;
   }
 }
+#search-box {
+  left: -1.5%;
+  padding: 1.5%;
+  width: 100%;
+  position:relative;
+  perspective: 500px;
+}
+#search-suggestion-box {
+  top: 1%;
+  width: 100%;
+  justify-content: flex-start;
+  gap: 1rem;
+  position: absolute;
+  z-index: 100;
+}

@@ -1,4 +1,4 @@
-import { MiToKm, toCelsius, units, getWeatherIcon, inchTomm} from "./utils.js";
+import { MiToKm, toCelsius, units, getWeatherIcon, inchTomm, handleSuggestion} from "./utils.js";
 
 function createContainer (id, classNames, ...children) {
   const container = document.createElement('div');
@@ -86,6 +86,23 @@ function createIcon(iconClass, id) {
   icon.className = iconClass;
   return icon;
 }
+function createSearchSuggestionButton(feat) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'suggestion btn';
+  btn.textContent = feat;
+  btn.onclick = () => handleSuggestion(feat);
+  return btn;
+}
+function createSearchSuggestionBox(features) {
+  const featuresDom = [];
+  for (const feat of features) {
+    const searchSuggestionLine = createSearchSuggestionButton(feat);
+    featuresDom.push(searchSuggestionLine);
+  }
+  const searchSuggestionsBox = createContainer('search-suggestion-box', 'flex-column', ...featuresDom);
+  return searchSuggestionsBox;
+}
 export {
   createContainer, 
   createElement, 
@@ -93,5 +110,6 @@ export {
   createAnHour, 
   createButton,
   createLabeledCard,
-  createIcon
+  createIcon, 
+  createSearchSuggestionBox
 };

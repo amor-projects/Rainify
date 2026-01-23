@@ -203,6 +203,24 @@ function getNext24HoursPrecip(next24Hours) {
   }
   return totalPrecip;
 }
+
+async function getSearchSuggestions(query) {
+  const response = await fetch(`https://photon.komoot.io/api/?q=${query}&limit=5`);
+  const data = await response.json();
+
+  return data.features.map(feature => {
+    const {name, city, country} = feature.properties;
+    return `${name}, ${city ? city + ',' : ''} ${country}`;
+  })
+}
+
+function handleSuggestion(value) {
+  const searchInput = document.querySelector('.search-input');
+  searchInput.value = value;
+  const searchBtn = document.querySelector('.search-btn');
+  searchBtn.click();
+}
+
 export {
   currentLocation, 
   units, 
@@ -216,5 +234,7 @@ export {
   inchTomm,
   convertEpochTohourAndMin, 
   getNext24Hours,
-  getNext24HoursPrecip
+  getNext24HoursPrecip,
+  getSearchSuggestions,
+  handleSuggestion
 };
