@@ -15,7 +15,7 @@ body.dark-theme {
   width: 90%;
   height: auto;
   background-color: rgba(128, 128, 128, 0.1) ;
-  margin: 0 5%;
+  margin: 1rem 5%;
   padding: 1rem;
   border-radius: 1rem;
 }

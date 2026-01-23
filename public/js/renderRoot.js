@@ -162,6 +162,9 @@ function renderHeader(currentLocation){
     img.width = '100%';
     img.height = '100%';
     const profile = createContainer('profile', 'profile-pic', img);
+    profile.addEventListener('click', () => {
+      window.location.href = 'https://github.com/ZephyrAmmor';
+    })
     header.append(profile);
   }
 };
