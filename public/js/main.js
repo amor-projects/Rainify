@@ -4,7 +4,7 @@ import { renderRoot } from "./renderRoot.js";
 
 async function fetchWeather (locality) {
   try {
-    const response = await fetch (`http://localhost:3000/fetch_weather?location=${locality}`);
+    const response = await fetch (`/api/fetch_weather?location=${locality}`);
     if (!response.ok) {
       throw new Error (`Failed! due to ${response.message}`);
     } else {

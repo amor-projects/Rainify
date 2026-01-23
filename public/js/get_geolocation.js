@@ -5,7 +5,7 @@ const successLocation = async (position) => {
   console.log (position.coords);
   try {
     if (coords && coords.longitude && coords.latitude) {
-      const LOCALITY_URL = `http://localhost:3000/get_locality?longitude=${coords.longitude}&latitude=${coords.latitude}`;
+      const LOCALITY_URL = `/api/get_locality?longitude=${coords.longitude}&latitude=${coords.latitude}`;
       const response = await fetch(LOCALITY_URL);
       if (!response.ok) {
         throw new Error (`Unable to get Location from ${coords}`);
