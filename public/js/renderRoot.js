@@ -1,7 +1,7 @@
 import { createButton, createContainer, createElement, createIcon, createSearchSuggestionBox} from "./components.js";
 import { renderDay} from "./renderDay.js";
 import { renderNext12Days } from "./renderNext12Days.js";
-import { currentLocation, weather, getSearchSuggestions} from "./utils.js";
+import { currentLocation, weather, getSearchSuggestions, theme} from "./utils.js";
 import {fetchWeather} from "./main.js";
 
 const body = document.querySelector('body');
@@ -115,7 +115,7 @@ function renderSearchBar(){
     parent.append(searchBar, searchBox);
   }
 }
-function renderToggle(){
+function renderToggle(theme){
   const parent = document.querySelector('#toggles');
   
   const lightBtn = document.createElement('button');
@@ -128,13 +128,15 @@ function renderToggle(){
   darkBtn.appendChild(moonIcon);
   darkBtn.className = 'toggle btn';
   lightBtn.className = 'toggle btn';
-  lightBtn.classList.add('active-toggle');
+  theme.mode === 'light' ? lightBtn.classList.add('active-toggle') : darkBtn.classList.add('active-toggle');
   lightBtn.addEventListener('click', () => {
     body.classList.remove('dark-theme');
+    theme.mode = 'light';
     if (!lightBtn.classList.contains('active-toggle')) lightBtn.classList.add('active-toggle');
     darkBtn.classList.remove('active-toggle');
   })
   darkBtn.addEventListener('click', () => {
+    theme.mode = 'dark';
     if (!body.classList.contains('dark-theme')) body.classList.add('dark-theme');
     if (!darkBtn.classList.contains('active-toggle')) darkBtn.classList.add('active-toggle');
     lightBtn.classList.remove('active-toggle')
@@ -152,7 +154,7 @@ function renderHeader(currentLocation){
   // Other Stuff like trace me button
   renderLocation(currentLocation);
   renderSearchBar();
-  renderToggle();
+  renderToggle(theme);
   const xProfile = document.querySelector('#profile');
   if (!xProfile) {
     const img = document.createElement('img');

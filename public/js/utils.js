@@ -1,5 +1,5 @@
 const currentLocation = {locality: 'Multan'};
-
+const theme = {mode: 'light'};
 const weather = {
   setWeather: function (data) {
     this._current = data.currentConditions || '';
@@ -226,6 +226,7 @@ export {
   currentLocation, 
   units, 
   weather, 
+  theme,
   toCelsius,
   MiToKm, 
   createWindDescription, 
