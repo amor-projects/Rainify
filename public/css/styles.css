@@ -4,6 +4,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: rgb(10, 10, 10);
   font-family: 'Comforta';
 }
 body.dark-theme {
@@ -46,7 +47,7 @@ body.dark-theme {
   font-size: calc((1.2rem + 2vw) / 2);
 }
 .xl {
-  font-size: calc((3.5rem + 2vw) / 2);
+  font-size: calc((3.0rem + 5vw) / 2);
   font-weight: 900;
 }
 .nav-btn {
@@ -104,6 +105,7 @@ body.dark-theme {
   color: gray;
 }
 .active-tab {
+  color: inherit;
   font-weight: 800;
   background-color: rgba(128, 128, 128, 0.1) ;
 }
@@ -157,6 +159,6 @@ body.dark-theme {
   color: transparent;
 }
 #temp-and-description .wi {
-  margin: 0.5rem 0.5rem 0 0;
+  margin: 1rem 1rem 0 0;
   font-size: 1.3em;
 }

@@ -17,7 +17,7 @@
 #nav {
   grid-area: 3/1/4/8;
   justify-content: left;
-  gap: 5%;
+  gap: 3%;
 }
 #temp-and-description {
   grid-column: span 2;

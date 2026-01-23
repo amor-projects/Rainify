@@ -20,7 +20,7 @@ function renderTempAndDescription(temp, condition, icon, low, high){
   const tempContainer = createContainer('temp-and-icon', 'flex-row xl bold',tempElement, weatherIcon);
   const lowElem = createLabeledElement('low-container', 'L: ', low);
   const highElem = createLabeledElement('high-container', 'H: ', high);
-  const lowHigh = createContainer('low-high', 'small flex-column', lowElem, highElem);
+  const lowHigh = createContainer('low-high', 'flex-column', lowElem, highElem);
   const descriptionElement = createElement(condition, 'description bold large');
   if (!parent) {
     const tempAndDescription = createContainer('temp-and-description', 'flex-column card', tempContainer, lowHigh, descriptionElement);
