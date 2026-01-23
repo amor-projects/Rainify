@@ -21,7 +21,7 @@ function renderTempAndDescription(temp, condition, icon, low, high){
   const lowElem = createLabeledElement('low-container', 'L: ', low);
   const highElem = createLabeledElement('high-container', 'H: ', high);
   const lowHigh = createContainer('low-high', 'flex-column', lowElem, highElem);
-  const descriptionElement = createElement(condition, 'description bold large');
+  const descriptionElement = createElement(condition, 'description bold medium');
   if (!parent) {
     const tempAndDescription = createContainer('temp-and-description', 'flex-column card', tempContainer, lowHigh, descriptionElement);
     main.append(tempAndDescription);

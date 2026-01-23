@@ -44,7 +44,10 @@ body.dark-theme {
 }
 
 .large {
-  font-size: calc((1.2rem + 2vw) / 2);
+  font-size: calc(1rem + 1vw);
+}
+.medium {
+  font-size: calc(0.7rem + 1vw);
 }
 .xl {
   font-size: calc(1.8rem + 2vw);

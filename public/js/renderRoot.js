@@ -6,20 +6,34 @@ import {fetchWeather} from "./main.js";
 
 const body = document.querySelector('body');
 const header = document.querySelector('#header');
-function handleNavBtn(btn) {
-  if (btn.id == 'today-tab') {
-    renderRoot('today', weather);
-  } else if (btn.id == 'tomorrow-tab') {
-    renderRoot('tomorrow', weather);
-  } else if (btn.id == 'next-12-days') {
-    renderRoot('next12Days', weather)
+const main = document.querySelector('#main');
+
+function handleNavBtn(btn, tab) {
+  if (btn.id == 'today-tab' && tab !== 'today') {
+    main.classList.add('fade-out');
+    setTimeout(() => {
+      console.log (`Swtiching tabs to today-tab`);
+       renderRoot('today', weather);
+    }, 500);
+  } else if (btn.id == 'tomorrow-tab' && tab !== 'tomorrow') {
+    main.classList.add('fade-out');
+    setTimeout(() => {
+      console.log (`Swtiching tabs to tomrrow-tab`);
+      renderRoot('tomorrow', weather);
+    }, 500);
+  } else if (btn.id == 'next-12-days' && tab !== 'next12Days') {
+    main.classList.add('fade-out');
+    setTimeout(() => {
+      console.log (`Swtiching tabs to next-12-days-tab`);
+      renderRoot('next12Days', weather)
+    }, 500);
   }
 }
 
 function renderTabs(tab){
-  const todayTab = createButton('Today', 'today-tab', 'nav-btn', handleNavBtn);
-  const tomorrowTab = createButton('Tomorrow', 'tomorrow-tab', 'nav-btn', handleNavBtn);
-  const next12DaysTab = createButton('Next 12 Days', 'next-12-days', 'nav-btn', handleNavBtn);
+  const todayTab = createButton('Today', 'today-tab', 'nav-btn', handleNavBtn, tab);
+  const tomorrowTab = createButton('Tomorrow', 'tomorrow-tab', 'nav-btn', handleNavBtn, tab);
+  const next12DaysTab = createButton('Next 12 Days', 'next-12-days', 'nav-btn', handleNavBtn, tab);
   if (tab === 'tomorrow') {
     tomorrowTab.classList.add('active-tab');
   } else if (tab === 'next12Days') {
@@ -152,6 +166,7 @@ function renderHeader(currentLocation){
 
 
 function renderRoot(tab, weather) {
+  main.classList.remove('fade-out');
   renderHeader(currentLocation);
   renderTabs(tab);
   if (tab === 'today') {

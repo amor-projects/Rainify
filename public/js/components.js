@@ -71,13 +71,13 @@ function createAnHour (hour) {
   );
   return hourContainer;
 }
-function createButton(text, id,classNames, handleClick) {
+function createButton(text, id,classNames, handleClick, tab) {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = classNames;
   btn.id = id;
   btn.textContent = text;
-  btn.onclick= (event) => handleClick(event.target);
+  btn.onclick= (event) => handleClick(event.target, tab);
   return btn;
 }
 function createIcon(iconClass, id) {
