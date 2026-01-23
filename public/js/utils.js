@@ -193,7 +193,6 @@ function getNext24Hours(today, tomorrow, currentHour ) {
       k++;
     }
   }
-  console.log(next24Hours);
   return next24Hours;
 }
 function getNext24HoursPrecip(next24Hours) {

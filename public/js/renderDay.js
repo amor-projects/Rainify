@@ -240,7 +240,6 @@ function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpo
     description = 'Sun is setting now';
     icon = 'sunset';
   }
-  console.log (convertEpochTohourAndMin(sunsetEpoch - timeEpoch), sunsetEpoch - timeEpoch);
   const parent = document.getElementById('Sun-rise-and-set-container');
   const sunriseElem = createLabeledElement('', 'Rise', sunrise  );
   const sunsetElem = createLabeledElement('', 'Set', sunset);
@@ -328,7 +327,6 @@ function renderDay (type, current, today = null, tomorrow)  {
   const sunriseEpoch = today.sunriseEpoch;
   const sunsetEpoch = today.sunsetEpoch;
   let timeEpoch = Math.floor(Date.now() / 1000);
-  console.log (timeEpoch);
   const date = new Date();
   let currentHour = '00'
   if (type === 'today') {
@@ -350,6 +348,15 @@ function renderDay (type, current, today = null, tomorrow)  {
   renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, todayWinddir, todayWindgust);
   renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch, type);
   renderNextHours(next24Hours);
+  setInterval(() => {
+    timeEpoch += 10;
+    renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch, type);
+    if (type === 'today') next24Hours = getNext24Hours(today, tomorrow, currentHour);
+    else next24Hours = getNext24Hours(tomorrow, '', -1); // use -1 because j + 1 is handling index;
+    const next24HoursPrecip = getNext24HoursPrecip(next24Hours);
+    renderPrecip(precip, next24HoursPrecip, preciptype, type);
+    renderNextHours(next24Hours);
+  }, 10000);
 }
 
 export {renderDay};

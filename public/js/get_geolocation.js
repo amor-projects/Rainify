@@ -2,7 +2,6 @@ import {currentLocation} from './utils.js';
 
 const successLocation = async (position) => {
   const coords = position.coords;
-  console.log (position.coords);
   try {
     if (coords && coords.longitude && coords.latitude) {
       const LOCALITY_URL = `/api/get_locality?longitude=${coords.longitude}&latitude=${coords.latitude}`;
