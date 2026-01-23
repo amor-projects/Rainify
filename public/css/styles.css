@@ -47,7 +47,7 @@ body.dark-theme {
   font-size: calc((1.2rem + 2vw) / 2);
 }
 .xl {
-  font-size: calc((3.0rem + 5vw) / 2);
+  font-size: calc(1.8rem + 2vw);
   font-weight: 900;
 }
 .nav-btn {
@@ -153,10 +153,7 @@ body.dark-theme {
 }
 #main.days-view .wi{
   font-size: 1.8rem ;
-  background-image: linear-gradient(to right,rgb(229, 19, 19), rgb(225, 154, 23), rgb(34, 224, 34), rgb(57, 57, 233), rgb(166, 55, 246), violet);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+  color: rgb(137, 185, 41);
 }
 #temp-and-description .wi {
   margin: 1rem 1rem 0 0;
@@ -167,6 +164,7 @@ body.dark-theme {
   backdrop-filter: blur(4px);
   border-radius: 1rem;
   padding: 1rem;
+  min-height: 250px;
 }
 .suggestion {
   font-weight: 700;

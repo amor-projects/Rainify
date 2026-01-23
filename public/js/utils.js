@@ -205,6 +205,7 @@ function getNext24HoursPrecip(next24Hours) {
 }
 
 async function getSearchSuggestions(query) {
+  if (!query) return null;
   const response = await fetch(`https://photon.komoot.io/api/?q=${query}&limit=5`);
   const data = await response.json();
 

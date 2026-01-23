@@ -47,10 +47,12 @@ function renderLocation(currentLocation){
 }
 
 function renderSearchSuggestionBox(searchSuggestions) {
-  const searchSuggestionsDom = createSearchSuggestionBox(searchSuggestions);
   const searchBox = document.getElementById('search-box');
   searchBox.replaceChildren();
+  if (searchSuggestions !== null) {
+  const searchSuggestionsDom = createSearchSuggestionBox(searchSuggestions);
   searchBox.append(searchSuggestionsDom);
+  }
 }
 
 function renderSearchBar(){
@@ -76,6 +78,9 @@ function renderSearchBar(){
     }
   });
   searchInput.addEventListener('keydown', (event) => {
+    setTimeout(() => {
+      console.log('Waiting');
+    }, 100);
     getSearchSuggestions(event.target.value)
       .then((suggestions) => renderSearchSuggestionBox(suggestions))
       .catch((error) => {
