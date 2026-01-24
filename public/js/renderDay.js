@@ -173,7 +173,7 @@ function renderPrecip(precip = 0, next24HourPrecip, preciptype, type) {
   let description = '';
 
   if (precip > 0 && type === 'today') {
-    description = `Currently ${precip} of ${preciptype} is falling.`
+    description = `Currently ${precip} mm of ${preciptype} is falling.`
   } else if (next24HourPrecip > 0) {
     let intensity = "";
     next24HourPrecip < 10 ? intensity = 'Light' : intensity = 'Heavy';
@@ -184,7 +184,7 @@ function renderPrecip(precip = 0, next24HourPrecip, preciptype, type) {
   let icon = 'rain';
   if (preciptype && preciptype[0] === 'snow') icon = 'snow';
   const precipIcon = createIcon(`wi wi-${icon}`);
-  const precipCard = createLabeledCard('PRECIPITATION', precipIcon, precip, '', description);
+  const precipCard = createLabeledCard('PRECIPITATION', precipIcon, `${precip} mm`, '', description);
 
   if (!parent) {
     const precipContainer = createContainer('Precipitation-container', '', precipCard);
