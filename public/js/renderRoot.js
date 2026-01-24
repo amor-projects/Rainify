@@ -62,10 +62,12 @@ function renderLocation(currentLocation){
 
 function renderSearchSuggestionBox(searchSuggestions) {
   const searchBox = document.getElementById('search-box');
-  searchBox.replaceChildren();
   if (searchSuggestions !== null) {
   const searchSuggestionsDom = createSearchSuggestionBox(searchSuggestions);
-  searchBox.append(searchSuggestionsDom);
+  if (searchBox) {
+    searchBox.replaceChildren();
+    searchBox.append(searchSuggestionsDom);
+  }
   }
 }
 
@@ -154,21 +156,22 @@ function renderHeader(currentLocation){
   renderSearchBar();
   renderToggle(theme);
   const xProfile = document.querySelector('#profile');
-  if (!xProfile) {
-    const img = document.createElement('img');
+  const img = document.createElement('img');
     img.src = '../assets/tanjiro-kamado-red-48.png';
     img.width = '100%';
     img.height = '100%';
     const profile = createContainer('profile', 'profile-pic', img);
     profile.addEventListener('click', () => {
       window.location.href = 'https://github.com/ZephyrAmmor';
-    })
-    header.append(profile);
-  }
+  })
+  if (xProfile) xProfile.remove();
+  header.append(profile);
 };
 
 
 function renderRoot(tab, weather) {
+  const root = document.getElementById('root');
+  root.classList.remove('fade-out-slow');
   main.classList.remove('fade-out');
   renderHeader(currentLocation);
   renderTabs(tab);

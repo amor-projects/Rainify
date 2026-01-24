@@ -97,3 +97,52 @@ body {
 #root.fade-out-slow {
   opacity: 0;
 }
+/* SKELETON ANIMATION */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.skeleton-loading {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(to right, rgba(120, 125, 120, 0.3) 4%, rgba(120, 120, 125, 0.3) 25%, rgba(125, 120,120, 0.3) 36%);
+  background-size: 1000px 100%;
+}
+
+/* SKELETON SHAPES */
+.sk-text {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+.sk-text.large { height: 2.5rem; width: 60%; }
+.sk-text.medium { height: 1.5rem; width: 40%; }
+.sk-text.small { height: 0.8rem; width: 80%; }
+.sk-text.full { width: 100%; }
+
+.sk-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.sk-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+/* Retain your layout structure, but force elements to handle empty children nicely */
+.card {
+  min-height: 120px; /* Ensure empty cards have height */
+  justify-content: space-between;
+}
+#search .skeleton-loading {
+  border-radius: 5rem;
+  min-height: 2.5rem;
+  min-width: 300px;
+}
+#header .sk-text {
+  margin-bottom: 0;
+}

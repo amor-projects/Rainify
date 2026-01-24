@@ -103,6 +103,95 @@ function createSearchSuggestionBox(features) {
   const searchSuggestionsBox = createContainer('search-suggestion-box', 'flex-column', ...featuresDom);
   return searchSuggestionsBox;
 }
+
+function renderRootSkeleton() {
+  const mainContainer = document.getElementById('main');
+  const headerContainer = document.getElementById('header');
+  // Using innerHTML to save time as this is only a skelton
+  const headerSkeletonHTML = `
+    <div id="location-container" class="flex-row" style="gap: 10px;">
+        <div class="skeleton-loading sk-text" style="width: 120px; height: 1.5rem; margin-bottom: 0;"></div>
+        <div class="skeleton-loading sk-icon"></div> 
+    </div>
+
+    <div id="search" class="search flex-column">
+        <div class="skeleton-loading sk-text" min-height: 2.5rem">
+        </div>
+    </div>
+
+    <div id="toggles" class="flex-row" style="gap: 8px;">
+        <div class="skeleton-loading sk-icon"></div>
+        <div class="skeleton-loading sk-icon"></div>
+    </div>
+
+    <div id="profile" class="profile-pic">
+        <div class="skeleton-loading sk-circle"></div>
+    </div>
+  `;
+
+  headerContainer.innerHTML = headerSkeletonHTML;
+  const createGridCard = (id) => `
+    <div id="${id}-container">
+      <div class="card flex-column">
+        <div class="flex-row gray" style="margin-bottom:10px;">
+          <div class="skeleton-loading sk-icon"></div> <div class="skeleton-loading sk-text medium"></div> 
+        </div>
+      <div class="skeleton-loading sk-text large full"></div> <div class="skeleton-loading sk-text small"></div> </div>
+    </div>
+  `;
+
+  const createHourCard = () => `
+    <div class="flex-column card" style="min-width: 130px; min-height: calc(80px + 6vw) gap">
+      <div class="skeleton-loading sk-text medium full"></div>
+      <div class='flex-row'>
+        <div class="skeleton-loading sk-icon" style="margin-left: 8px 0;"></div>
+        <div class="skeleton-loading sk-text small full"></div>
+      </div>
+     <div class='flex-row'>
+        <div class="skeleton-loading sk-icon" style="margin-left: 8px 0;"></div>
+        <div class="skeleton-loading sk-text small full"></div>
+      </div>
+     <div class='flex-row'>
+        <div class="skeleton-loading sk-icon" style="margin-left: 8px 0;"></div>
+        <div class="skeleton-loading sk-text small full"></div>
+      </div>
+      <div class="skeleton-loading sk-text small full"></div>
+    </div>
+  `;
+
+  const skeletonHTML = `
+    <div id="temp-and-description" class="flex-column card">
+      <div class="flex-row xl bold">
+        <div class="skeleton-loading sk-text large"></div>
+        <div class="skeleton-loading sk-circle"></div>
+      </div>
+      <div id="low-high" class="flex-column">
+         <div class="skeleton-loading sk-text small"></div>
+         <div class="skeleton-loading sk-text small"></div>
+      </div>
+      <div class="skeleton-loading sk-text medium full" style="margin-top:10px;"></div>
+    </div>
+
+    ${createGridCard('Feels')}
+    ${createGridCard('Pressure')}
+    ${createGridCard('Humidity')}
+    ${createGridCard('Visiblity')}
+    ${createGridCard('Uv-index')}
+    ${createGridCard('Precipitation')}
+    ${createGridCard('Wind-status')}
+    ${createGridCard('Sun-rise-and-set')}
+
+    <div id="hours-carousel" class="flex-row" style="overflow: hidden; padding: 10px 0;">
+      <div id="hours-container" class="flex-row" style="width: 100%;">
+        ${Array(10).fill(0).map(() => createHourCard()).join('')}
+      </div>
+    </div>
+  `;
+
+  // 4. Inject into the DOM
+  mainContainer.innerHTML = skeletonHTML;
+}
+
 export {
   createContainer, 
   createElement, 
@@ -111,5 +200,6 @@ export {
   createButton,
   createLabeledCard,
   createIcon, 
-  createSearchSuggestionBox
+  createSearchSuggestionBox,
+  renderRootSkeleton,
 };
