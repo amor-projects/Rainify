@@ -163,7 +163,7 @@ body.dark-theme {
   font-size: 1.3em;
 }
 #search-suggestion-box {
-  background-color: rgba(128, 128, 128, 0.3);
+  background-color: rgba(128, 128, 128, 0.5);
   backdrop-filter: blur(4px);
   border-radius: 1rem;
   padding: 1rem;

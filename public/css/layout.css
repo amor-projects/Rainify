@@ -42,18 +42,23 @@
   #temp-and-description {
     grid-column : span 1;
   }
+  #search, #location-container {
+    min-width: 50%;
+  }
 }
 @media screen and (width < 550px) {
   .hours-btn {
     display: none;
+  }
+  #search, #location-container {
+    width: 100%;
   }
 }
 #search-box {
   left: -1.5%;
   padding: 1.5%;
   width: 100%;
-  position:relative;
-  perspective: 500px;
+  position: relative;
 }
 #search-suggestion-box {
   top: 1%;
