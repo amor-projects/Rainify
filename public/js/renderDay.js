@@ -199,11 +199,13 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   const parent = document.getElementById('Wind-status-container');
   const windspeed = currentWindspeed || todayWindspeed;
   let winddir = currentWinddir || todayWinddir;
+  let windspeedWithUnits;
   if (units.speed == 'Km/h') {
-    windspeedWithUnits = MiToKm (windspeed);
+    windspeedWithUnits = `${MiToKm (windspeed)} ${units.speed}`;
     todayWindGust = MiToKm(todayWindGust);
+  } else {
+    windspeedWithUnits = `${windspeed} ${units.speed}`;
   }
-  const windspeedWithUnits = `${windspeed} ${units.speed}`;
   const windgustWithUnits = `${todayWindGust} ${units.speed}`;
   winddir = findWindDirection(winddir);
   const windGustElem = createLabeledElement('wind-gust medium', 'GUSTS', windgustWithUnits);
@@ -255,10 +257,6 @@ function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpo
   }
 }
 
-function renderMoonPhase(moonphaseDegree) {
-  const moonphaseValue = createElement(getMoonphaseString(moonphaseDegree), 'moonphase-value');
-  
-}
 function renderNextHours(hours){
   const cardSize = 320;
   const parent = document.getElementById('hours-carousel');

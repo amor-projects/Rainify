@@ -16,7 +16,7 @@ async function fetchWeather (locality) {
       const raw = await response.json();
       const data = raw.data;
       weather.setWeather(data);
-      renderRoot('today', weather);
+      renderRoot(weather);
     }
   } catch (error) {
     console.error (error.message);

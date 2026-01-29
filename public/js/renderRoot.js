@@ -1,7 +1,7 @@
 import { createButton, createContainer, createElement, createIcon, createSearchSuggestionBox} from "./components.js";
 import { renderDay} from "./renderDay.js";
 import { renderNext12Days } from "./renderNext12Days.js";
-import { currentLocation, weather, getSearchSuggestions, theme} from "./utils.js";
+import { currentLocation, weather, getSearchSuggestions, theme, units, currentTab} from "./utils.js";
 import {fetchWeather} from "./main.js";
 
 const body = document.querySelector('body');
@@ -13,19 +13,22 @@ function handleNavBtn(btn, tab) {
     main.classList.add('fade-out');
     setTimeout(() => {
       console.log (`Swtiching tabs to today-tab`);
-       renderRoot('today', weather);
+      currentTab.tab = 'today';
+      renderRoot(weather);
     }, 500);
   } else if (btn.id == 'tomorrow-tab' && tab !== 'tomorrow') {
     main.classList.add('fade-out');
     setTimeout(() => {
       console.log (`Swtiching tabs to tomrrow-tab`);
-      renderRoot('tomorrow', weather);
+      currentTab.tab = 'tomorrow'
+      renderRoot(weather);
     }, 500);
   } else if (btn.id == 'next-12-days' && tab !== 'next12Days') {
     main.classList.add('fade-out');
     setTimeout(() => {
       console.log (`Swtiching tabs to next-12-days-tab`);
-      renderRoot('next12Days', weather)
+      currentTab.tab = 'next12Days'
+      renderRoot( weather)
     }, 500);
   }
 }
@@ -150,11 +153,51 @@ function renderToggle(theme){
   }
   
 };
+
+function renderUnitToggle () {
+  const parent = document.getElementById('units-toggle');
+  const cBtn = document.createElement('button');
+  cBtn.type = 'button';
+  cBtn.textContent = '°C';
+  const fBtn = document.createElement('button');
+  fBtn.type = 'button';
+  fBtn.textContent = '°F';
+  cBtn.className = 'toggle btn';
+  fBtn.className = 'toggle btn';
+  units.current  === 'metric' ? cBtn.classList.add('active-toggle') : fBtn.classList.add('active-toggle')
+  cBtn.addEventListener('click', () => {
+    units.setUnit('metric');
+    const root = document.getElementById('root');
+    if (!root.classList.contains('fade-out-slow')) root.classList.add('fade-out-slow');
+    setTimeout(() => {
+      root.classList.remove('fade-out-slow');
+      renderRoot(weather);
+    }, 500);
+  })
+  fBtn.addEventListener('click', () => {
+    units.setUnit('us');
+    const root = document.getElementById('root');
+    if (!root.classList.contains('fade-out-slow')) root.classList.add('fade-out-slow');
+    setTimeout(() => {
+      root.classList.remove('fade-out-slow');
+      renderRoot(weather);
+    }, 500);
+  })
+
+  if (!parent) {
+    const unitsToggle = createContainer('units-toggle', 'flex-row bold', cBtn, fBtn);
+    header.append(unitsToggle);
+  } else {
+    parent.replaceChildren();
+    parent.append(cBtn, fBtn);
+  }
+}
 function renderHeader(currentLocation){
   // Other Stuff like trace me button
   renderLocation(currentLocation);
   renderSearchBar();
   renderToggle(theme);
+  renderUnitToggle();
   const xProfile = document.querySelector('#profile');
   const img = document.createElement('img');
     img.src = '../assets/tanjiro-kamado-red-48.png';
@@ -169,7 +212,8 @@ function renderHeader(currentLocation){
 };
 
 
-function renderRoot(tab, weather) {
+function renderRoot(weather) {
+  const tab = currentTab.tab;
   const root = document.getElementById('root');
   root.classList.remove('fade-out-slow');
   main.classList.remove('fade-out');
