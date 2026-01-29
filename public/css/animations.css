@@ -105,7 +105,7 @@ body {
 
 .skeleton-loading {
   animation: shimmer 2s infinite linear;
-  background: linear-gradient(to right, rgba(120, 125, 120, 0.3) 4%, rgba(120, 120, 125, 0.3) 25%, rgba(125, 120,120, 0.3) 36%);
+  background: linear-gradient(to right, rgba(100, 100, 100, 0.3) 4%, rgba(120, 120, 125, 0.3) 25%, rgba(140, 140,140, 0.3) 36%);
   background-size: 1000px 100%;
 }
 
