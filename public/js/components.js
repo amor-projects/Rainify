@@ -123,6 +123,10 @@ function renderRootSkeleton() {
         <div class="skeleton-loading sk-icon"></div>
         <div class="skeleton-loading sk-icon"></div>
     </div>
+    <div id="units-toggle" class="flex-row" style="gap: 8px;">
+        <div class="skeleton-loading sk-icon"></div>
+        <div class="skeleton-loading sk-icon"></div>
+    </div>
 
     <div id="profile" class="profile-pic">
         <div class="skeleton-loading sk-circle"></div>
