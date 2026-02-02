@@ -98,19 +98,19 @@ function findWindDirection(value) {
   let winddir = '';
   if (value > 337.5 || value <= 22.5) {
     winddir = 'N';
-  } else if (value > 22.5 || value <= 67.5) {
+  } else if (value > 22.5 && value <= 67.5) {
     winddir = "NE";
-  } else if (value > 67.5 || value <= 112.5 ) {
+  } else if (value > 67.5 && value <= 112.5 ) {
     winddir = 'E';
-  } else if (value > 112.5 || value <= 157.5) {
+  } else if (value > 112.5 && value <= 157.5) {
     winddir = 'SE';
-  } else if (value > 157.5 || value <= 202.5) {
+  } else if (value > 157.5 && value <= 202.5) {
     winddir = 'S';
-  } else if (value > 202.5 || value <=247.5) {
+  } else if (value > 202.5 && value <=247.5) {
     winddir = 'SW';
-  } else if (value > 247.5 || value <= 292.5) {
+  } else if (value > 247.5 && value <= 292.5) {
     winddir = 'W';
-  } else if (value > 292.5 || value <= 337.5) {
+  } else if (value > 292.5 && value <= 337.5) {
     winddir = 'NW';
   } else {
     winddir = "Unknown";
