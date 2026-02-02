@@ -40,7 +40,13 @@ const options = {
 
 async function getGeoLocation () {
   if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(successLocation, failureLocation, options);
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        resolve(successLocation(position));
+      }, (error) => {
+        reject(failureLocation(error));
+      }, options);
+    });
   } else {
     alert ("Geolocation is not supported in your browser!")
   }
