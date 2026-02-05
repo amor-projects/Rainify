@@ -107,6 +107,7 @@ function createSearchSuggestionBox(features) {
 function renderRootSkeleton() {
   const mainContainer = document.getElementById('main');
   const headerContainer = document.getElementById('header');
+  const naveTabs = document.getElementById('nav');
   // Using innerHTML to save time as this is only a skelton
   const headerSkeletonHTML = `
     <div id="location-container" class="flex-row" style="gap: 10px;">
@@ -132,6 +133,13 @@ function renderRootSkeleton() {
         <div class="skeleton-loading sk-circle"></div>
     </div>
   `;
+
+  const navTabsSkelton = `
+    <div class="nav-btn skeleton-loading" style="min-height: 2rem; min-width: 80px"></div>
+    <div class="nav-btn skeleton-loading" style="min-height: 2rem; min-width: 90px"></div>
+    <div class="nav-btn skeleton-loading" style="min-height: 2rem; min-width: 100px"></div>
+  `
+  naveTabs.innerHTML = navTabsSkelton;
 
   headerContainer.innerHTML = headerSkeletonHTML;
   const createGridCard = (id) => `
