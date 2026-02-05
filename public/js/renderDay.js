@@ -105,16 +105,19 @@ function renderHumidityDew(humidity, dew, type) {
 
 function renderVisibility(visibility, reason, type) {
   const parent = document.getElementById('Visibility-container');
-  let limit = 5;
+  let limit = 5.0;
   if (units.visibility === 'Km') {
     visibility = MiToKm(visibility);
     limit = MiToKm(limit);
   }
-  reason === 'fog' ? reason = 'Fog' : reason ='Smoke';
   let description;
-  visibility < limit ? description = `${reason} is affecting visiblity`: description = 'Visiblity is Normal';
+  if (reason === 'fog') {
+    parseFloat(visibility) < limit ? description = 'Fog is affecting visiblity': description = 'Visiblity is Normal';
+  } else {
+    parseFloat(visibility) < limit ? description = 'Visiblity is being affected': description = 'Visiblity is Normal';
+  }
   if (type === 'tomorrow' ) {
-    visibility < limit ? description = `${reason} will be affecting visbility` : description = 'Visbility will be Normal';
+    parseFloat(visibility) < limit ? description = `Visblity will be affected Tomorrow` : description = 'Visbility will be Normal';
   }
   const visibilityIcon = createIcon('wi wi-fog', 'visibility-icon');
   const visibilityCard = createLabeledCard('VISIBLITY', visibilityIcon, `${visibility}${units.visibility}`, '', description);
