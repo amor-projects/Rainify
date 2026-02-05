@@ -1,11 +1,19 @@
 import { createContainer, createElement, createIcon } from './components.js';
-import {  getWeatherIcon, units } from './utils.js';
+import {  getWeatherIcon, MiToKm, toCelsius, units } from './utils.js';
 
 function createOneDayCard(day) {
+  let tempWidthUnits = `${day.temp}${units.temp}`;
+  if (units.temp === '°C') {
+    tempWidthUnits = `${toCelsius(day.temp)}${units.temp}`
+  }
+  let windspeedWithUnits = `${day.windspeed}${units.speed}`;
+  if (units.speed === 'Km/h') {
+    windspeedWithUnits = `${MiToKm(day.windspeed)}${units.speed}`;
+  }
   const date = createElement(day.datetime, 'date-time-day large bold');
   const icon = getWeatherIcon(day.icon);
   const conditionsIcon = createIcon(`wi wi-${icon}`, `${day.datetime}-conditions-icon`);
-  const temp = createElement(`${day.temp}${units.temp}`, 'day-temp');
+  const temp = createElement(tempWidthUnits, 'day-temp');
   const tempContainer = createContainer(`${day.datetime}-temp-container`, 'flex-row bold large', conditionsIcon, temp);
   const cloudIcon = createIcon('wi wi-cloudy', `${day.datetime}-cloud-icon`)
   const cloudCover = createElement(`${day.cloudcover}%`, 'day-cloudcover');
@@ -14,7 +22,7 @@ function createOneDayCard(day) {
   const rainChances = createElement(`${day.precipprob}%`, 'day-rain-chances');
   const rainContainer = createContainer(`${day.datetime}-rain-container`, 'flex-row', rainIcon, rainChances);
   const windIcon = createIcon('wi wi-windy', `${day.datetime}-wind-icon`);
-  const windspeed = createElement(`${day.windspeed}${units.speed}`, 'day-wind-speed');
+  const windspeed = createElement(windspeedWithUnits, 'day-wind-speed');
   const windContainer = createContainer(`${day.datetime}-wind-container`, 'flex-row', windIcon, windspeed);
   const conditions = createElement(day.conditions, 'day-conditions');
   const oneDay = createContainer(
@@ -39,10 +47,6 @@ function renderNext12Days(days) {
     main.appendChild(oneDay);
   }
   main.classList.add('days-view');
-  const rainChart = document.querySelector('#rain-chart');
-  if (rainChart) {
-    rainChart.remove();
-  };
 }
 
 export {renderNext12Days}
