@@ -59,7 +59,7 @@ function createAnHour (hour) {
   const precipContainer = createContainer(`${hour.datetime}-precip-container`, 'flex-row', precipIcon, precipElem);
   const conditionsElem = createElement(conditions, 'value');
   const windspeedElem = createElement(`${windspeed}${units.speed}`, 'value');
-  const windContainer = createContainer(`${hour.datatime}-wind-container`, 'flex-row', windIcon, windspeedElem);
+  const windContainer = createContainer(`${hour.datetime}-wind-container`, 'flex-row', windIcon, windspeedElem);
   const hourContainer  = createContainer( 
     `${time}-hour`, 
     'flex-column card', 
