@@ -54,7 +54,7 @@ function renderFeels(temp, feels){
     feelsContainer.appendChild(feelslike);
     main.append(feelsContainer);
   } else {
-    parent.removeChildren();
+    parent.replaceChildren();
     parent.appendChild(feelslike);
   }  
 }
