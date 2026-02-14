@@ -9,21 +9,21 @@ const header = document.querySelector('#header');
 const main = document.querySelector('#main');
 
 function handleNavBtn(btn, tab) {
-  if (btn.id == 'today-tab' && tab !== 'today') {
+  if (btn.id === 'today-tab' && tab !== 'today') {
     main.classList.add('fade-out');
     setTimeout(() => {
       console.log (`Swtiching tabs to today-tab`);
       currentTab.tab = 'today';
       renderRoot(weather);
     }, 500);
-  } else if (btn.id == 'tomorrow-tab' && tab !== 'tomorrow') {
+  } else if (btn.id === 'tomorrow-tab' && tab !== 'tomorrow') {
     main.classList.add('fade-out');
     setTimeout(() => {
       console.log (`Swtiching tabs to tomrrow-tab`);
       currentTab.tab = 'tomorrow'
       renderRoot(weather);
     }, 500);
-  } else if (btn.id == 'next-12-days' && tab !== 'next12Days') {
+  } else if (btn.id === 'next-12-days' && tab !== 'next12Days') {
     main.classList.add('fade-out');
     setTimeout(() => {
       console.log (`Swtiching tabs to next-12-days-tab`);
@@ -89,7 +89,7 @@ function renderSearchBar(){
   searchBtn.addEventListener('click', () => {
     const search = document.querySelector('.search-input');
     const value = search.value;
-    if (value && value != currentLocation.locality) {
+    if (value && value !== currentLocation.locality) {
       searchBox.replaceChildren();
       currentLocation.locality = value;
       currentLocation.countryName = "";
@@ -152,7 +152,7 @@ function renderToggle(theme){
     parent.append(lightBtn, darkBtn)
   }
   
-};
+}
 
 function renderUnitToggle () {
   const parent = document.getElementById('units-toggle');
@@ -201,16 +201,13 @@ function renderHeader(currentLocation){
   const xProfile = document.querySelector('#profile');
   const img = document.createElement('img');
     img.src = '../assets/tanjiro-kamado-red-48.png';
-    img.width = '100%';
-    img.height = '100%';
     const profile = createContainer('profile', 'profile-pic', img);
     profile.addEventListener('click', () => {
       window.location.href = 'https://github.com/ZephyrAmmor';
   })
   if (xProfile) xProfile.remove();
   header.append(profile);
-};
-
+}
 
 function renderRoot(weather) {
   const tab = currentTab.tab;
