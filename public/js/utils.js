@@ -31,20 +31,20 @@ const units = {
   _speed: 'Mi/h',
   _dew: '°F',
   setUnit: function (type) {
-    if (type == 'metric') {
-      this._temp = '°C',
-      this._visibility = 'Km',
-      this._pressure = 'inHg',
-      this._speed = 'Km/h',
+    if (type === 'metric') {
+      this._temp = '°C';
+      this._visibility = 'Km';
+      this._pressure = 'inHg';
+      this._speed = 'Km/h';
       this._dew = '°C';
       this.current = 'metric'
     } else {
-      this._temp = '°F',
-      this._visibility = 'Mi',
-      this._pressure = 'hPa',
-      this._speed = 'Mi/h',
+      this._temp = '°F';
+      this._visibility = 'Mi';
+      this._pressure = 'hPa';
+      this._speed = 'Mi/h';
       this._dew = '°F';
-      this.current = 'us'
+      this.current = 'us';
     }
   },
   get temp () {
