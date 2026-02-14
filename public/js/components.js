@@ -15,7 +15,7 @@ function createElement(value, classNames) {
   valueELem.textContent = value;
   valueELem.className = classNames;
   return valueELem;
-};
+}
 
 function createLabeledCard(label, icon, value, classNames, description, child = null) {
   const container = document.createElement('div');
@@ -31,13 +31,12 @@ function createLabeledCard(label, icon, value, classNames, description, child = 
 function createLabeledElement(id, label, value) {
   const labelElem = createElement(label, 'bold');
   const valueElem = createElement(value, 'value');
-  const container = createContainer(id, 'flex-row', labelElem, valueElem);
-  return container;
+  return createContainer(id, 'flex-row', labelElem, valueElem);
 }
 function createAnHour (hour) {
   const time = hour.datetime.slice(0, 5);
   let temp = hour.temp;
-  if (units.temp == '°C') {
+  if (units.temp === '°C') {
     temp = toCelsius(temp);
   }
   temp = `${temp}${units.temp}`;
@@ -45,7 +44,7 @@ function createAnHour (hour) {
   const precip = `${inchTomm(hour.precip)} mm`;
   let windspeed = hour.windspeed;
   const conditions = hour.conditions;
-  if (units.temp == 'Km/h') {
+  if (units.temp === 'Km/h') {
     windspeed = MiToKm(windspeed);
   }
   const preciptype = hour.preciptype !== null ? hour.preciptype[0] : 'rain';
@@ -60,7 +59,7 @@ function createAnHour (hour) {
   const conditionsElem = createElement(conditions, 'value');
   const windspeedElem = createElement(`${windspeed}${units.speed}`, 'value');
   const windContainer = createContainer(`${hour.datetime}-wind-container`, 'flex-row', windIcon, windspeedElem);
-  const hourContainer  = createContainer( 
+  return createContainer(
     `${time}-hour`, 
     'flex-column card', 
     timeElem, 
@@ -69,7 +68,6 @@ function createAnHour (hour) {
     windContainer, 
     conditionsElem
   );
-  return hourContainer;
 }
 function createButton(text, id,classNames, handleClick, tab) {
   const btn = document.createElement('button');
@@ -100,8 +98,7 @@ function createSearchSuggestionBox(features) {
     const searchSuggestionLine = createSearchSuggestionButton(feat);
     featuresDom.push(searchSuggestionLine);
   }
-  const searchSuggestionsBox = createContainer('search-suggestion-box', 'flex-column', ...featuresDom);
-  return searchSuggestionsBox;
+  return createContainer('search-suggestion-box', 'flex-column', ...featuresDom);
 }
 
 function renderRootSkeleton() {
@@ -109,14 +106,14 @@ function renderRootSkeleton() {
   const headerContainer = document.getElementById('header');
   const naveTabs = document.getElementById('nav');
   // Using innerHTML to save time as this is only a skelton
-  const headerSkeletonHTML = `
+  headerContainer.innerHTML = `
     <div id="location-container" class="flex-row" style="gap: 10px;">
         <div class="skeleton-loading sk-text" style="width: 120px; height: 1.5rem; margin-bottom: 0;"></div>
         <div class="skeleton-loading sk-icon"></div> 
     </div>
 
     <div id="search" class="search flex-column">
-        <div class="skeleton-loading sk-text" min-height: 2.5rem">
+        <div class="skeleton-loading sk-text" style="min-height: 2.5rem">
         </div>
     </div>
 
@@ -134,14 +131,12 @@ function renderRootSkeleton() {
     </div>
   `;
 
-  const navTabsSkelton = `
+  naveTabs.innerHTML = `
     <div class="nav-btn skeleton-loading" style="min-height: 2rem; min-width: 80px"></div>
     <div class="nav-btn skeleton-loading" style="min-height: 2rem; min-width: 90px"></div>
     <div class="nav-btn skeleton-loading" style="min-height: 2rem; min-width: 100px"></div>
   `
-  naveTabs.innerHTML = navTabsSkelton;
 
-  headerContainer.innerHTML = headerSkeletonHTML;
   const createGridCard = (id) => `
     <div id="${id}-container">
       <div class="card flex-column">
@@ -153,25 +148,25 @@ function renderRootSkeleton() {
   `;
 
   const createHourCard = () => `
-    <div class="flex-column card" style="min-width: 130px; min-height: calc(80px + 6vw) gap">
+    <div class="flex-column card" style="min-width: 130px; min-height: calc(80px + 6vw)">
       <div class="skeleton-loading sk-text medium full"></div>
       <div class='flex-row'>
-        <div class="skeleton-loading sk-icon" style="margin-left: 8px 0;"></div>
+        <div class="skeleton-loading sk-icon" style="margin-left: 8px;"></div>
         <div class="skeleton-loading sk-text small full"></div>
       </div>
      <div class='flex-row'>
-        <div class="skeleton-loading sk-icon" style="margin-left: 8px 0;"></div>
+        <div class="skeleton-loading sk-icon" style="margin-left: 8px;"></div>
         <div class="skeleton-loading sk-text small full"></div>
       </div>
      <div class='flex-row'>
-        <div class="skeleton-loading sk-icon" style="margin-left: 8px 0;"></div>
+        <div class="skeleton-loading sk-icon" style="margin-left: 8px;"></div>
         <div class="skeleton-loading sk-text small full"></div>
       </div>
       <div class="skeleton-loading sk-text small full"></div>
     </div>
   `;
 
-  const skeletonHTML = `
+  mainContainer.innerHTML  = `
     <div id="temp-and-description" class="flex-column card">
       <div class="flex-row xl bold">
         <div class="skeleton-loading sk-text large"></div>
@@ -187,7 +182,7 @@ function renderRootSkeleton() {
     ${createGridCard('Feels')}
     ${createGridCard('Pressure')}
     ${createGridCard('Humidity')}
-    ${createGridCard('Visiblity')}
+    ${createGridCard('Visibility')}
     ${createGridCard('Uv-index')}
     ${createGridCard('Precipitation')}
     ${createGridCard('Wind-status')}
@@ -199,9 +194,6 @@ function renderRootSkeleton() {
       </div>
     </div>
   `;
-
-  // 4. Inject into the DOM
-  mainContainer.innerHTML = skeletonHTML;
 }
 
 export {
