@@ -112,17 +112,17 @@ function renderVisibility(visibility, reason, type) {
   }
   let description;
   if (reason === 'fog') {
-    parseFloat(visibility) < limit ? description = 'Fog is affecting visiblity': description = 'Visiblity is Normal';
+    parseFloat(visibility) < limit ? description = 'Fog is affecting visibility': description = 'Visibility is Normal';
   } else {
-    parseFloat(visibility) < limit ? description = 'Visiblity is being affected': description = 'Visiblity is Normal';
+    parseFloat(visibility) < limit ? description = 'Visibility is being affected': description = 'Visibility is Normal';
   }
   if (type === 'tomorrow' ) {
-    parseFloat(visibility) < limit ? description = `Visblity will be affected Tomorrow` : description = 'Visbility will be Normal';
+    parseFloat(visibility) < limit ? description = `Visibility will be affected Tomorrow` : description = 'Visibility will be Normal';
   }
   const visibilityIcon = createIcon('wi wi-fog', 'visibility-icon');
-  const visibilityCard = createLabeledCard('VISIBLITY', visibilityIcon, `${visibility}${units.visibility}`, '', description);
+  const visibilityCard = createLabeledCard('VISIBILITY', visibilityIcon, `${visibility}${units.visibility}`, '', description);
   if (!parent) {
-    const visibilityContainer = createContainer('Visiblity-container', '', visibilityCard);
+    const visibilityContainer = createContainer('Visibility-container', '', visibilityCard);
     main.append(visibilityContainer);
   } else {
     parent.replaceChildren();
