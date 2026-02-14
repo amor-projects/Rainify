@@ -25,7 +25,7 @@ function createOneDayCard(day) {
   const windspeed = createElement(windspeedWithUnits, 'day-wind-speed');
   const windContainer = createContainer(`${day.datetime}-wind-container`, 'flex-row', windIcon, windspeed);
   const conditions = createElement(day.conditions, 'day-conditions');
-  const oneDay = createContainer(
+  return createContainer(
     `${day.datetime}`,
     'day-card card dark-gray flex-column',
     date,
@@ -35,8 +35,6 @@ function createOneDayCard(day) {
     windContainer,
     conditions
   );
-
-  return oneDay;
 }
 
 function renderNext12Days(days) {

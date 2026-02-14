@@ -1,5 +1,5 @@
-import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard, createIcon, createButton} from "./components.js";
-import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin, getNext24Hours, getNext24HoursPrecip, getMoonphaseString } from "./utils.js";
+import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard, createIcon} from "./components.js";
+import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin, getNext24Hours, getNext24HoursPrecip} from "./utils.js";
 
 const main = document.querySelector('#main');
 
@@ -34,11 +34,11 @@ function renderTempAndDescription(temp, condition, icon, low, high){
 
 function renderFeels(temp, feels){
   const parent = document.getElementById('Feels-container');
-  if (units.temp == '°C') {
+  if (units.temp === '°C') {
     feels = toCelsius(feels);
   }
   feels = `${feels}${units.temp}`;
-  let feelsDescription = '';
+  let feelsDescription;
   if (feels < temp) {
     feelsDescription = 'It feels colder than the actual temperature';
   } else if (feels > temp) {
@@ -89,7 +89,7 @@ function renderPressure(pressure, type){
 
 function renderHumidityDew(humidity, dew, type) {
   const parent = document.getElementById('Humidity-container');
-  let dewDescription = '';
+  let dewDescription;
   if (type === 'today') dewDescription = `The dew point is ${dew}${units.dew} right now.`;
   else dewDescription = `The dew point is expected to be ${dew}${units.dew}.`
   const humidityIcon = createIcon('wi wi-humidity', 'humidity-icon');
@@ -144,7 +144,7 @@ function renderUvIndex (uvindex) {
   const displayIndex = Math.min(uvindex, maxUV);
   const percentage = (displayIndex / maxUV) * 100;
   uvIndicator.style.left = `${percentage}%`;
-  let description = '';
+  let description;
   if (uvindex <= 2) {
     description = 'Low for the rest of the day';
   } else if (uvindex < 5) {
@@ -173,12 +173,12 @@ function renderPrecip(precip = 0, next24HourPrecip, preciptype, type) {
   const parent = document.getElementById('Precipitation-container');
   precip = inchTomm(precip);
   next24HourPrecip = inchTomm(next24HourPrecip);
-  let description = '';
+  let description;
 
   if (precip > 0 && type === 'today') {
     description = `Currently ${precip} mm of ${preciptype} is falling.`
   } else if (next24HourPrecip > 0) {
-    let intensity = "";
+    let intensity;
     next24HourPrecip < 10 ? intensity = 'Light' : intensity = 'Heavy';
     description = `${intensity} ${preciptype} expected. Total of ${next24HourPrecip} mm in the next 24 hours`;
   } else {
@@ -203,7 +203,7 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   const windspeed = currentWindspeed || todayWindspeed;
   let winddir = currentWinddir || todayWinddir;
   let windspeedWithUnits;
-  if (units.speed == 'Km/h') {
+  if (units.speed === 'Km/h') {
     windspeedWithUnits = `${MiToKm (windspeed)} ${units.speed}`;
     todayWindGust = MiToKm(todayWindGust);
   } else {
@@ -227,7 +227,7 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   }
 }
 
-function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch, type) {
+function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch) {
   let description = '';
   let icon = '';
   if (sunriseEpoch - timeEpoch > 60) {
