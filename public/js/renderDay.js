@@ -89,6 +89,9 @@ function renderPressure(pressure, type){
 
 function renderHumidityDew(humidity, dew, type) {
   const parent = document.getElementById('Humidity-container');
+  if (units.dew === '°C') {
+    dew = toCelsius(dew);
+  }
   let dewDescription;
   if (type === 'today') dewDescription = `The dew point is ${dew}${units.dew} right now.`;
   else dewDescription = `The dew point is expected to be ${dew}${units.dew}.`
