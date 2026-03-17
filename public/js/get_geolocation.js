@@ -1,5 +1,17 @@
-import { errorPage } from './errorPage.js';
 import {currentLocation} from './utils.js';
+
+const DEFAULT_LOCATION = {
+  locality: 'London',
+  city: 'London',
+  countryName: 'England'
+};
+
+function applyFallbackLocation() {
+  currentLocation.locality = DEFAULT_LOCATION.locality;
+  currentLocation.city = DEFAULT_LOCATION.city;
+  currentLocation.countryName = DEFAULT_LOCATION.countryName;
+  return currentLocation;
+}
 
 const successLocation = async (position) => {
   const coords = position.coords;
@@ -11,9 +23,9 @@ const successLocation = async (position) => {
         throw new Error (`Unable to get Location from ${coords}`);
       } else {
         const data = await response.json();
-        currentLocation.locality = data.locality;
-        currentLocation.city = data.city;
-        currentLocation.countryName = data.countryName;
+        currentLocation.locality = data.locality || data.city || data.countryName || DEFAULT_LOCATION.locality;
+        currentLocation.city = data.city || data.locality || DEFAULT_LOCATION.city;
+        currentLocation.countryName = data.countryName || DEFAULT_LOCATION.countryName;
       }
     } else {
       throw new Error("Invalid Coordinates Object!");
@@ -21,18 +33,15 @@ const successLocation = async (position) => {
   } catch (error) {
     console.error (error);
     console.error (`Unable to Get Location due to ${error.message} falling back to default location`);
-    currentLocation.locality = 'Multan';
-    currentLocation.countryName = 'Pakistan';
+    return applyFallbackLocation();
   }
-  return currentLocation
+  return currentLocation;
 }
 
 const failureLocation = (error) => {
   console.error(`Failed to get Location due to ${error.message}`)
   console.log("Falling back to default Location");
-  currentLocation.locality = 'London';
-  currentLocation.countryName = 'England';
-  return currentLocation;
+  return applyFallbackLocation();
 }
 
 const options = {
@@ -43,18 +52,16 @@ const options = {
 
 async function getGeoLocation () {
   if ("geolocation" in navigator) {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition((position) => {
-        resolve(successLocation(position));
+    return new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        resolve(await successLocation(position));
       }, (error) => {
-        reject(failureLocation(error));
+        resolve(failureLocation(error));
       }, options);
     });
   } else {
-    errorPage(0, "Geolocation is not supported in your browser! Retrying with defaults...");
-    setTimeout(() => {
-      currentLocation.locality = 'Multan';
-    }, 2000);
+    console.warn('Geolocation is not supported. Falling back to default location.');
+    return applyFallbackLocation();
   }
 }
 
