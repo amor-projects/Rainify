@@ -15,7 +15,7 @@ function renderTempAndDescription(temp, condition, icon, low, high){
   low = `${low}${units.temp}`;
   high = `${high}${units.temp}`;
   icon = getWeatherIcon(icon);
-  const weatherIcon = createIcon(`wi wi-${icon}`);
+  const weatherIcon = createIcon(`wi ${icon}`);
   const tempElement = createElement(temp, 'value');
   const tempContainer = createContainer('temp-and-icon', 'flex-row xl bold',tempElement, weatherIcon);
   const lowElem = createLabeledElement('low-container', 'L: ', low);
@@ -217,10 +217,10 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   }
   const windgustWithUnits = `${todayWindGust} ${units.speed}`;
   winddir = findWindDirection(winddir);
-  const windGustElem = createLabeledElement('wind-gust medium', 'GUSTS', windgustWithUnits);
-  const windDirElem = createLabeledElement('wind-dir medium', 'DIRECTION', winddir);
+  const windGustElem = createLabeledElement('wind-gust', 'GUSTS', windgustWithUnits);
+  const windDirElem = createLabeledElement('wind-dir', 'DIRECTION', winddir);
   const windDescription = createWindDescription(windspeed, winddir);
-  const wind = createContainer('wind-container', '', windGustElem, windDirElem);
+  const wind = createContainer('wind-container', 'flex-column', windGustElem, windDirElem);
 
   const windIcon = createIcon('wi wi-windy');
   const windCard = createLabeledCard('WIND', windIcon, windspeedWithUnits, '', windDescription, wind);
@@ -233,36 +233,47 @@ function renderWindStatus(currentWindspeed, todayWindspeed, currentWinddir, toda
   }
 }
 
-function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch) {
+function renderSunRiseAndSet(sunrise, sunset, sunriseEpoch, sunsetEpoch, timeEpoch, type) {
   let description = '';
   let icon = '';
-  if (sunriseEpoch - timeEpoch > 60) {
+  if (type === 'tomorrow') {
+    description = `Sunrise at ${sunrise}, sunset at ${sunset}.`;
+    icon = 'day-sunny';
+  } else if (sunriseEpoch - timeEpoch > 60) {
     const [hour, minutes] = convertEpochTohourAndMin(sunriseEpoch - timeEpoch);
     description = `Sun will rise in ${hour} hr and ${minutes} min`;
     icon = 'sunrise';
-  } else if (sunriseEpoch - timeEpoch < 60 && sunriseEpoch - timeEpoch > 0){
+  } else if (sunriseEpoch - timeEpoch >= 0) {
     description = 'Sun is rising now.';
     icon = 'sunrise';
   } else if (sunsetEpoch - timeEpoch > 60) {
     const [hour, minutes] = convertEpochTohourAndMin(sunsetEpoch - timeEpoch);
     description = `Sun will set in ${hour} hr and ${minutes} min`;
     icon = 'sunset';
-  } else if (sunsetEpoch - timeEpoch < 60 && sunsetEpoch - timeEpoch > 0) {
-    description = 'Sun is setting now';
+  } else if (sunsetEpoch - timeEpoch >= 0) {
+    description = 'Sun is setting now.';
     icon = 'sunset';
+  } else {
+    description = 'Sun has set for today.';
+    icon = 'night-clear';
   }
+  const sunIcon   = createIcon(`wi wi-${icon}`, 'sun-icon');
+  const titleLabel = createElement('SUN', 'medium');
+  const titleRow   = createContainer('SUN-title', 'flex-row gray', sunIcon, titleLabel);
+  const riseElem   = createLabeledElement('sun-rise-row', 'RISE', sunrise);
+  const setElem    = createLabeledElement('sun-set-row',  'SET',  sunset);
+  const timesGrid  = createContainer('sun-times', 'flex-column', riseElem, setElem);
+  const descElem   = createElement(description, 'small');
+  const sunCard    = document.createElement('div');
+  sunCard.id        = 'SUN-card';
+  sunCard.className = 'card flex-column';
+  sunCard.append(titleRow, timesGrid, descElem);
   const parent = document.getElementById('Sun-rise-and-set-container');
-  const sunriseElem = createLabeledElement('', 'RISE', sunrise  );
-  const sunsetElem = createLabeledElement('', 'SET', sunset);
-  const sunRiseAndSet = createContainer('sun-rise-and-set', '', sunriseElem, sunsetElem);
-  const sunIcon = createIcon(`wi wi-${icon}`);
-  const sunCard = createLabeledCard('SUN', sunIcon, '', '', description,sunRiseAndSet );
   if (!parent) {
-    const sunStatus = createContainer('Sun-rise-and-set-container', 'flex-column',sunCard);
+    const sunStatus = createContainer('Sun-rise-and-set-container', 'flex-column', sunCard);
     main.append(sunStatus);
   } else {
-    parent.replaceChildren();
-    parent.append(sunCard);
+    parent.replaceChildren(sunCard);
   }
 }
 
@@ -333,7 +344,7 @@ function renderDay (type, current, today = null, tomorrow)  {
   const sunset = today.sunset;
   const sunriseEpoch = today.sunriseEpoch;
   const sunsetEpoch = today.sunsetEpoch;
-  let timeEpoch = Math.floor(Date.now() / 1000);
+  const timeEpoch = Math.floor(Date.now() / 1000);
   const date = new Date();
   let currentHour = '00'
   if (type === 'today') {

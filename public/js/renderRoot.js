@@ -240,7 +240,7 @@ function renderRoot(weather) {
     renderNext12Days(weather.next12Days);
   } else {
     console.error("Invalid Tab option falling back to Today tab");
-    renderDay(weather.current, weather.today);
+    renderDay('today', weather.current, weather.today);
   }
 }
 
