@@ -344,7 +344,7 @@ function renderDay (type, current, today = null, tomorrow)  {
   const sunset = today.sunset;
   const sunriseEpoch = today.sunriseEpoch;
   const sunsetEpoch = today.sunsetEpoch;
-  const timeEpoch = Math.floor(Date.now() / 1000);
+  const timeEpoch = current.datetimeEpoch;
   const date = new Date();
   let currentHour = '00'
   if (type === 'today') {
