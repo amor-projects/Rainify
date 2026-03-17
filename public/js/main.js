@@ -24,8 +24,11 @@ async function fetchWeather (locality) {
 };
 
 getGeoLocation()
-  .then(() => fetchWeather(currentLocation.locality))
-  .catch((error) => console.log("Unable to Fetch Location due to ", error)
+  .then(() => fetchWeather(currentLocation.locality || currentLocation.city || currentLocation.countryName))
+  .catch((error) => {
+    fetchWeather(currentLocation.locality || 'London');
+    console.log("Unable to Fetch Location due to ", error)
+  }
   );
 
 
