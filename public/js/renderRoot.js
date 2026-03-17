@@ -102,12 +102,28 @@ function renderSearchBar(){
       searchBtn.click();
       return;
     }
-    getSearchSuggestions(event.target.value)
-      .then((suggestions) => renderSearchSuggestionBox(suggestions))
-      .catch((error) => {
-        renderSearchSuggestionBox(['Nothing Here']);
-        console.error(error.message);
-      });
+    if (event.key === 'Escape') {
+      searchBox.replaceChildren();
+      return;
+    }
+  });
+
+  let _suggestionTimer = null;
+  searchInput.addEventListener('input', (event) => {
+    clearTimeout(_suggestionTimer);
+    const value = event.target.value;
+    if (!value) {
+      searchBox.replaceChildren();
+      return;
+    }
+    _suggestionTimer = setTimeout(() => {
+      getSearchSuggestions(value)
+        .then((suggestions) => renderSearchSuggestionBox(suggestions))
+        .catch((error) => {
+          renderSearchSuggestionBox(['Nothing Here']);
+          console.error(error.message);
+        });
+    }, 300);
   });
   const searchBar = createContainer('search-bar', 'search-bar flex-row', searchInput, searchBtn);
   if (!parent) {
