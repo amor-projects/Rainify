@@ -9,7 +9,11 @@ const API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServic
 const API_KEY = process.env.WEATHER_API_KEY; 
 
 app.get('/api/fetch_weather', async (req, res) => {
-  const location = req.query.location || "Multan";
+  if (!API_KEY) {
+    res.status(401).json({success: false, error: 'API_KEY Missing from the Environment Variable'})
+    return;
+  }
+  const location = encodeURIComponent(req.query.location || "Multan");
   const API_URL = `${API_ENDPOINT}${location}?key=${API_KEY}`;
 
   try {

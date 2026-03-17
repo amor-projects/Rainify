@@ -2,6 +2,14 @@ const BDC_API_ENDPOINT = "https://api-bdc.net/data/reverse-geocode";
 const BDC_API_KEY = process.env.BDC_API_KEY;
 
 async function getLocation(coords) {
+  if (!BDC_API_KEY) {
+    return {
+      ok: false,
+      city: data.city,
+      locality: data.locality,
+      countryName: data.countryName
+    }
+  }
   const location = {ok: false, name: null, countryName: null};
   const longitude = coords.longitude;
   const latitude = coords.latitude;
