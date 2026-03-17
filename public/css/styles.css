@@ -1,3 +1,8 @@
+:root {
+  --font-ui: 'Sora', sans-serif;
+  --font-data: 'JetBrains Mono', monospace;
+}
+
 body {
   font-size: calc(0.8rem + 0.3vw);
   min-height: 99vh;
@@ -5,7 +10,7 @@ body {
   justify-content: center;
   align-items: center;
   color: rgb(10, 10, 10);
-  font-family: 'Comforta';
+  font-family: var(--font-ui);
 }
 body.dark-theme {
   background-color: rgb(10, 10, 10);
@@ -174,6 +179,21 @@ body.dark-theme {
   font-weight: 700;
   background: none;
   text-align: left;
+}
+
+/* Monospace for weather metrics and time values */
+.value,
+[class$='-value'],
+.date-time-day,
+.day-temp,
+.day-cloudcover,
+.day-rain-chances,
+.day-wind-speed,
+#hours-container .bold,
+#hours-container .value,
+#sun-times .value {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ERROR PAGE */
