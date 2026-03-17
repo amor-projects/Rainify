@@ -175,3 +175,21 @@ body.dark-theme {
   background: none;
   text-align: left;
 }
+
+/* ERROR PAGE */
+.error-card {
+  min-height: 40vh;
+  max-width: 480px;
+  margin: auto;
+  gap: 1rem;
+  justify-content: center;
+  padding: 2.5rem;
+}
+.error-icon {
+  font-size: 4rem;
+}
+.retry-btn {
+  margin-top: 0.5rem;
+  padding: 0.75rem 2rem;
+  cursor: pointer;
+}
