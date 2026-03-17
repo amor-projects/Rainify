@@ -34,14 +34,14 @@ const units = {
     if (type === 'metric') {
       this._temp = '°C';
       this._visibility = 'Km';
-      this._pressure = 'inHg';
+      this._pressure = 'hPa';
       this._speed = 'Km/h';
       this._dew = '°C';
       this.current = 'metric'
     } else {
       this._temp = '°F';
       this._visibility = 'Mi';
-      this._pressure = 'hPa';
+      this._pressure = 'inHg';
       this._speed = 'Mi/h';
       this._dew = '°F';
       this.current = 'us';
@@ -70,6 +70,10 @@ function toCelsius(value) {
 
 function MiToKm(value) {
   return (value * 1.60934).toFixed(1);
+}
+
+function hPaToinHg(value) {
+  return (value / 33.86).toFixed(1);
 }
 
 function getMoonphaseString(phase) {
@@ -180,7 +184,7 @@ const iconMapping = {
 function getWeatherIcon(vcIcon) {
   // Default to 'na' if the icon isn't in our list
   const iconClass = iconMapping[vcIcon] || "wi-na";
-  return `wi ${iconClass}`;
+  return iconClass;
 }
 
 function inchTomm(inch) {
@@ -239,7 +243,8 @@ export {
   theme,
   currentTab,
   toCelsius,
-  MiToKm, 
+  MiToKm,
+  hPaToinHg,
   createWindDescription, 
   findWindDirection, 
   getMoonphaseString,

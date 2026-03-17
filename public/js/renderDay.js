@@ -1,5 +1,5 @@
 import { createContainer, createElement, createLabeledElement, createAnHour, createLabeledCard, createIcon} from "./components.js";
-import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin, getNext24Hours, getNext24HoursPrecip} from "./utils.js";
+import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, getWeatherIcon, inchTomm, convertEpochTohourAndMin, getNext24Hours, getNext24HoursPrecip, hPaToinHg} from "./utils.js";
 
 const main = document.querySelector('#main');
 
@@ -60,7 +60,7 @@ function renderFeels(temp, feels){
 }
 
 function renderPressure(pressure, type){
-  const parent = document.getElementById('Pressure-container');
+  const parent = document.getElementById('Pressure-container'); 
   let description = '';
   if (pressure < 980) {
     description = 'Very low pressure. Expect severe weather and strong winds';
@@ -74,6 +74,9 @@ function renderPressure(pressure, type){
     description = 'High pressure. Expect clear skies and calm, dry weather.';
   } else if (pressure > 1040 ) {
     description = 'Very high pressure. Very stable, dry, and cool conditions.';
+  }
+  if (units.pressure === 'inHg') {
+    pressure = hPaToinHg(pressure);
   }
   pressure = `${pressure} ${units.pressure}`;
   const pressureIcon = createIcon('wi wi-barometer', 'pressure-icon');
