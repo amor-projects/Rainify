@@ -1,3 +1,4 @@
+import { errorPage } from './errorPage.js';
 import {currentLocation} from './utils.js';
 
 const successLocation = async (position) => {
@@ -11,6 +12,8 @@ const successLocation = async (position) => {
       } else {
         const data = await response.json();
         currentLocation.locality = data.locality;
+        currentLocation.city = data.city;
+        currentLocation.countryName = data.countryName;
       }
     } else {
       throw new Error("Invalid Coordinates Object!");
@@ -48,7 +51,10 @@ async function getGeoLocation () {
       }, options);
     });
   } else {
-    alert ("Geolocation is not supported in your browser!")
+    errorPage(0, "Geolocation is not supported in your browser! Retrying with defaults...");
+    setTimeout(() => {
+      currentLocation.locality = 'Multan';
+    }, 2000);
   }
 }
 
