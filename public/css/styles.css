@@ -93,8 +93,9 @@ body.dark-theme {
 }
 .search-btn{
   height: 100%;
-  width: 2.5em;
+  width: 3em;
   border-radius: 0rem 1rem 1rem 0rem;
+  padding: 8px;
 }
 .toggle {
   padding: 0.75rem;

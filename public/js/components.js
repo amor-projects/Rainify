@@ -109,7 +109,6 @@ function renderRootSkeleton() {
   headerContainer.innerHTML = `
     <div id="location-container" class="flex-row" style="gap: 10px;">
         <div class="skeleton-loading sk-text" style="width: 120px; height: 1.5rem; margin-bottom: 0;"></div>
-        <div class="skeleton-loading sk-icon"></div> 
     </div>
 
     <div id="search" class="search flex-column">
