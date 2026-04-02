@@ -149,7 +149,12 @@ function renderToggle(theme){
   darkBtn.appendChild(moonIcon);
   darkBtn.className = 'toggle btn';
   lightBtn.className = 'toggle btn';
-  theme.mode === 'light' ? lightBtn.classList.add('active-toggle') : darkBtn.classList.add('active-toggle');
+  if (theme.mode === 'light') {
+    lightBtn.classList.add('active-toggle');
+  } else {
+    darkBtn.classList.add('active-toggle');
+    if (!body.classList.contains('dark-theme')) body.classList.add('dark-theme');
+  } 
   lightBtn.addEventListener('click', () => {
     body.classList.remove('dark-theme');
     theme.mode = 'light';

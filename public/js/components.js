@@ -1,4 +1,4 @@
-import { MiToKm, toCelsius, units, getWeatherIcon, inchTomm, handleSuggestion} from "./utils.js";
+import { MiToKm, toCelsius, units, getWeatherIcon, inchTomm, handleSuggestion, theme} from "./utils.js";
 
 function createContainer (id, classNames, ...children) {
   const container = document.createElement('div');
@@ -102,6 +102,8 @@ function createSearchSuggestionBox(features) {
 }
 
 function renderRootSkeleton() {
+  const body = document.body;
+  if (!body.classList.contains('dark-theme') && theme.mode == 'dark') body.classList.add('dark-theme');
   const mainContainer = document.getElementById('main');
   const headerContainer = document.getElementById('header');
   const naveTabs = document.getElementById('nav');

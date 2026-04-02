@@ -1,5 +1,6 @@
 const currentLocation = {locality: 'Multan'};
-const theme = {mode: 'light'};
+const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const theme = {mode: isDarkMode ? 'dark' : 'light'};
 const currentTab = {
   tab: 'today'
 }
