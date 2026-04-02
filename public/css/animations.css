@@ -118,7 +118,7 @@ body {
 
 .sk-text.large { height: 2.5rem; width: 60%; }
 .sk-text.medium { height: 1.5rem; width: 40%; }
-.sk-text.small { height: 0.8rem; width: 80%; }
+.sk-text.small { height: 0.8rem; width: 60%; }
 .sk-text.full { width: 100%; }
 
 .sk-circle {
@@ -132,7 +132,11 @@ body {
   height: 30px;
   border-radius: 50%;
 }
-
+.sk-mini-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
 /* Retain your layout structure, but force elements to handle empty children nicely */
 .card {
   min-height: 120px; /* Ensure empty cards have height */

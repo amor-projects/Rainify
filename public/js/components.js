@@ -149,19 +149,19 @@ function renderRootSkeleton() {
   `;
 
   const createHourCard = () => `
-    <div class="flex-column card" style="min-width: 130px; min-height: calc(80px + 6vw)">
+    <div class="flex-column card" style="min-width: 140px; min-height: calc(80px + 6vw)">
       <div class="skeleton-loading sk-text medium full"></div>
       <div class='flex-row'>
-        <div class="skeleton-loading sk-icon" style="margin-left: 8px;"></div>
-        <div class="skeleton-loading sk-text small full"></div>
+        <div class="skeleton-loading sk-mini-icon" style="margin-left: 4px;"></div>
+        <div class="skeleton-loading sk-text small"></div>
       </div>
      <div class='flex-row'>
-        <div class="skeleton-loading sk-icon" style="margin-left: 8px;"></div>
-        <div class="skeleton-loading sk-text small full"></div>
+        <div class="skeleton-loading sk-mini-icon" style="margin-left: 4px;"></div>
+        <div class="skeleton-loading sk-text small"></div>
       </div>
      <div class='flex-row'>
-        <div class="skeleton-loading sk-icon" style="margin-left: 8px;"></div>
-        <div class="skeleton-loading sk-text small full"></div>
+        <div class="skeleton-loading sk-mini-icon" style="margin-left: 4px;"></div>
+        <div class="skeleton-loading sk-text small"></div>
       </div>
       <div class="skeleton-loading sk-text small full"></div>
     </div>
