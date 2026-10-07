@@ -1,6 +1,5 @@
 const { getLocation } = require('./location.js');
 const express = require('express');
-const path = require('path');
 const app = express();
 
 const API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
@@ -10,19 +9,28 @@ const API_KEY = process.env.WEATHER_API_KEY;
 
 app.get('/api/fetch_weather', async (req, res) => {
   if (!API_KEY) {
-    res.status(401).json({success: false, error: 'API_KEY Missing from the Environment Variable'})
+    res.status(401).json({success: false, error: 'API_KEY Missing from the Environment Variable'});
     return;
   }
-  const location = encodeURIComponent(req.query.location || "Multan");
+  const locationQuery = typeof req.query.location === 'string' ? req.query.location.trim() : '';
+  if (!locationQuery) {
+    res.status(400).json({success: false, error: 'A location is required'});
+    return;
+  }
+  const location = encodeURIComponent(locationQuery);
   const API_URL = `${API_ENDPOINT}${location}?key=${API_KEY}`;
 
   try {
     const response = await fetch(API_URL);
-    if (!response.ok) throw new Error(`API returned Status: ${response.status}`);
+    if (!response.ok) {
+      const error = new Error(`API returned Status: ${response.status}`);
+      error.status = response.status === 400 ? 404 : response.status;
+      throw error;
+    }
     const data = await response.json();
     res.json({ success: true, data });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(error.status || 500).json({ success: false, error: error.message });
   }
 });
 

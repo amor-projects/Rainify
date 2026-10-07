@@ -1,47 +1,64 @@
 # ☔ Rainify
 
-A weather app focused on simplicity and clean design.
+A weather app focused on clear forecasts, useful context, and a calm interface.
 
 **[Live Demo](https://rainify-weather.vercel.app)**
 
 ## What is it?
 
-Rainify shows you the weather forecast in a straightforward way. I wanted to build something that wasn't cluttered with ads or unnecessary features—just a clean interface that gives you the information you need.
+Rainify gives you the weather information you need without filling the screen with unnecessary controls. It combines current conditions, hourly forecasts, daily outlooks, and practical guidance in a responsive interface designed for desktop and mobile devices.
 
 ## Features
 
-- Clean, minimal interface
-- Real-time weather data
-- Responsive design for mobile and desktop
-- Location-based or manual city search
+- Current weather conditions with temperature, feels-like temperature, humidity, pressure, visibility, UV, precipitation, wind, and sunrise/sunset details
+- Hourly forecast carousel with bounded navigation
+- Today, Tomorrow, and Next 12 Days views
+- Full forecast view for each day in the 12-day outlook
+- Practical descriptions for rain, wind, UV exposure, humidity, visibility, and pressure
+- Location-based weather using browser geolocation
+- Manual city and location search with suggestions
+- Pinned locations saved in local storage
+- Fahrenheit and Celsius unit switching
+- Light and dark themes with system preference support
+- Responsive layout for desktop and mobile devices
+- Reduced-motion support for users who prefer less animation
 
 ## Built With
 
-- **JavaScript** - Vanilla JS, no frameworks
-- **CSS** - For styling and animations
-- **Weather API** - Real-time weather data
+- **JavaScript** - Vanilla JS with ES modules
+- **CSS** - Responsive layout, theme styling, loading states, and animations
+- **Express** - Local development server and API routes
+- **Visual Crossing** - Weather data
+- **BigDataCloud** - Reverse geolocation
+- **Photon** - Location search suggestions
 - **Vercel** - Deployment and hosting
 
 ## Running Locally
-You need to create a `.env` file and add values for the following variables:
+
+You need to create a `.env` file in the project root with the following variables:
 
 ```sh
-WEATHER_API_KEY # From Visual Crossing
-BDC_API_KEY     # Big Data Cloud reverse geolocation API
+WEATHER_API_KEY=your_visual_crossing_api_key
+BDC_API_KEY=your_bigdatacloud_api_key
+```
 
+Do not commit `.env` or share your API keys.
+
+```sh
 # Clone the repo
 git clone https://github.com/amor-projects/Rainify.git
+cd Rainify
 
 # Install dependencies
-npm install -g vercel
-cd Rainify
 npm install
 
 # Start the development server
-vercel dev
+npm run dev
 ```
 
-The app should open at `http://localhost:3000`
+The app should open at `http://localhost:3000`.
+
+The local development server serves the frontend and API routes through Express. The Vercel configuration is kept for deployment.
 
 ## Contributing
 

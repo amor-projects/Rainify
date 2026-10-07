@@ -1,6 +1,18 @@
 const currentLocation = {locality: 'Multan'};
-const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-const theme = {mode: isDarkMode ? 'dark' : 'light'};
+const savedTheme = localStorage.getItem('rainify:theme');
+const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+const theme = {mode: savedTheme || (systemPrefersDark.matches ? 'dark' : 'light')};
+if (!savedTheme) {
+  const syncSystemTheme = ({matches}) => {
+    theme.mode = matches ? 'dark' : 'light';
+    document.body.classList.toggle('dark-theme', matches);
+    document.body.classList.toggle('light-theme', !matches);
+    document.querySelector('#light-toggle')?.classList.toggle('active-toggle', !matches);
+    document.querySelector('#dark-toggle')?.classList.toggle('active-toggle', matches);
+  };
+  if (systemPrefersDark.addEventListener) systemPrefersDark.addEventListener('change', syncSystemTheme);
+  else systemPrefersDark.addListener?.(syncSystemTheme);
+}
 const currentTab = {
   tab: 'today'
 }
@@ -145,12 +157,12 @@ const directions = {
 function createWindDescription(windspeed, winddir) {
   const speed = Number(windspeed);
   const thresholds = [
-    { limit: 3, adj: 'lazy', advice: advices.lazy },
-    { limit: 7, adj: 'soft', advice: advices.soft },
-    { limit: 15, adj: 'brisk', advice: advices.brisk },
-    { limit: 25, adj: 'strong', advice: advices.strong },
-    { limit: 35, adj: 'powerful blasting', advice: advices.blasting },
-    { limit: Infinity, adj: 'relentless', advice: advices.relentless }
+    { limit: 3, adj: 'calm', advice: 'great conditions for an easy walk or relaxed outdoor time' },
+    { limit: 7, adj: 'light', advice: 'comfortable for most plans, with only a gentle breeze' },
+    { limit: 15, adj: 'breezy', advice: 'fine for going out, though light layers may move around' },
+    { limit: 25, adj: 'strong', advice: 'secure loose items and expect the wind to be noticeable' },
+    { limit: 35, adj: 'very strong', advice: 'take care outdoors and avoid exposed routes if possible' },
+    { limit: Infinity, adj: 'dangerous', advice: 'consider postponing non-essential outdoor plans' }
   ];
 
   // 2. Find the first threshold that is greater than or equal to current speed
@@ -158,9 +170,9 @@ function createWindDescription(windspeed, winddir) {
   const match = thresholds.find(thresh => speed <= thresh.limit)
   || { adj: 'calm', advice: 'It is a still day.' };
 
-  const windDirection = directions[winddir] || 'variable direction';
+  const windDirection = directions[winddir] || winddir || 'variable direction';
 
-  return `A ${match.adj} wind from the ${windDirection}; ${match.advice}`;
+  return `A ${match.adj} wind from the ${windDirection}; ${match.advice}.`;
 }
 
 const iconMapping = {
@@ -219,15 +231,41 @@ function getNext24HoursPrecip(next24Hours) {
   return totalPrecip;
 }
 
-async function getSearchSuggestions(query) {
-  if (!query) return null;
-  const response = await fetch(`https://photon.komoot.io/api/?q=${query}&limit=5`);
+const PINNED_LOCATIONS_KEY = 'rainify:pinned-locations';
+
+function getPinnedLocations() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PINNED_LOCATIONS_KEY) || '[]');
+    return Array.isArray(saved) ? saved.filter(location => typeof location === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+function togglePinnedLocation(location) {
+  const normalized = location.trim();
+  const pinned = getPinnedLocations();
+  const index = pinned.findIndex(item => item.toLowerCase() === normalized.toLowerCase());
+  if (index >= 0) pinned.splice(index, 1);
+  else pinned.unshift(normalized);
+  try {
+    localStorage.setItem(PINNED_LOCATIONS_KEY, JSON.stringify(pinned.slice(0, 8)));
+  } catch (error) {
+    console.error('Unable to save pinned location', error);
+  }
+  return pinned;
+}
+
+async function getSearchSuggestions(query, signal) {
+  if (!query.trim()) return null;
+  const response = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`, { signal });
+  if (!response.ok) throw new Error(`Suggestions returned Status: ${response.status}`);
   const data = await response.json();
 
   return data.features.map(feature => {
     const {name, city, country} = feature.properties;
-    return `${name}, ${city ? city + ',' : ''} ${country}`;
-  })
+    return [name, city, country].filter(Boolean).join(', ');
+  }).filter(Boolean);
 }
 
 function handleSuggestion(value) {
@@ -255,5 +293,7 @@ export {
   getNext24Hours,
   getNext24HoursPrecip,
   getSearchSuggestions,
+  getPinnedLocations,
+  togglePinnedLocation,
   handleSuggestion
 };

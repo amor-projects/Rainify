@@ -3,6 +3,24 @@ import { units, toCelsius, MiToKm, createWindDescription, findWindDirection, get
 
 const main = document.querySelector('#main');
 
+function createHelpfulSummary(condition, precipprob, windspeed, windgust, type) {
+  const period = type === 'today' ? 'today' : type === 'tomorrow' ? 'tomorrow' : 'that day';
+  const cleanCondition = String(condition || 'Conditions vary').replace(/[.!?]+$/, '');
+  if (precipprob >= 60) {
+    return `${cleanCondition}. Rain is likely ${period}, so keep an umbrella close and plan for slower travel.`;
+  }
+  if (precipprob >= 30) {
+    return `${cleanCondition}. There is a chance of rain ${period}; a light layer or compact umbrella may be useful.`;
+  }
+  if (windspeed >= 20 || windgust >= 30) {
+    return `${cleanCondition}. It will be breezy ${period}; secure loose items and expect a noticeable wind chill.`;
+  }
+  if (Number(windspeed) <= 5) {
+    return `${cleanCondition}. Calm, comfortable conditions are expected ${period}—a good window to be outside.`;
+  }
+  return `${cleanCondition}. A generally comfortable day, with no major weather disruption expected ${period}.`;
+}
+
 function renderTempAndDescription(temp, condition, icon, low, high){
   const parent = document.getElementById('temp-and-description')
 
@@ -34,14 +52,16 @@ function renderTempAndDescription(temp, condition, icon, low, high){
 
 function renderFeels(temp, feels){
   const parent = document.getElementById('Feels-container');
+  const numericTemp = units.temp === '°C' ? Number(toCelsius(temp)) : Number(temp);
+  const numericFeels = units.temp === '°C' ? Number(toCelsius(feels)) : Number(feels);
   if (units.temp === '°C') {
     feels = toCelsius(feels);
   }
   feels = `${feels}${units.temp}`;
   let feelsDescription;
-  if (feels < temp) {
+  if (numericFeels < numericTemp) {
     feelsDescription = 'It feels colder than the actual temperature';
-  } else if (feels > temp) {
+  } else if (numericFeels > numericTemp) {
     feelsDescription = 'It feels warmer than the actual temperature';
   } else {
     feelsDescription = 'Similar to the actual temperature';
@@ -63,17 +83,17 @@ function renderPressure(pressure, type){
   const parent = document.getElementById('Pressure-container'); 
   let description = '';
   if (pressure < 980) {
-    description = 'Very low pressure. Expect severe weather and strong winds';
+    description = 'Low pressure can bring unsettled weather. Keep an eye on the rain and wind outlook.';
   } else if (pressure < 1000) {
-    description = 'Low pressure. Expect unsettled weather, clouds, or rain.';
+    description = 'A changeable pattern is possible, so check the hourly outlook before longer plans.';
   } else if (pressure < 1025 && type === 'today' ) {
-    description = 'Pressure is normal. Conditions are typical and stable.';
-  } else if (pressure < 1025 && type === 'tomorrow') {
-    description = 'Pressure will be Normal. Conditions will be typical and stable';
+    description = 'Pressure is steady, with no strong signal of a major weather change.';
+  } else if (pressure < 1025) {
+    description = 'A balanced pressure pattern suggests fairly typical conditions.';
   }else if (pressure < 1040) {
-    description = 'High pressure. Expect clear skies and calm, dry weather.';
+    description = 'Higher pressure often supports calmer, drier weather and more settled plans.';
   } else if (pressure > 1040 ) {
-    description = 'Very high pressure. Very stable, dry, and cool conditions.';
+    description = 'A very settled pattern is likely, though clear skies can mean cooler mornings.';
   }
   if (units.pressure === 'inHg') {
     pressure = hPaToinHg(pressure);
@@ -96,8 +116,12 @@ function renderHumidityDew(humidity, dew, type) {
     dew = toCelsius(dew);
   }
   let dewDescription;
-  if (type === 'today') dewDescription = `The dew point is ${dew}${units.dew} right now.`;
-  else dewDescription = `The dew point is expected to be ${dew}${units.dew}.`
+  const humidityAdvice = humidity >= 75
+    ? 'The air may feel muggy, especially during activity.'
+    : humidity <= 35
+      ? 'The air is dry, so water and moisturizer may be useful.'
+      : 'Humidity should feel broadly comfortable.';
+  dewDescription = `${type === 'today' ? `The dew point is ${dew}${units.dew} right now.` : `The dew point should be around ${dew}${units.dew}.`} ${humidityAdvice}`;
   const humidityIcon = createIcon('wi wi-humidity', 'humidity-icon');
   const humidtyCard = createLabeledCard('HUMIDITY', humidityIcon, `${humidity}%`, '', dewDescription);
   if (!parent) {
@@ -118,12 +142,12 @@ function renderVisibility(visibility, reason, type) {
   }
   let description;
   if (reason === 'fog') {
-    parseFloat(visibility) < limit ? description = 'Fog is affecting visibility': description = 'Visibility is Normal';
+    parseFloat(visibility) < limit ? description = 'Fog may reduce contrast; allow extra time for driving.' : description = 'Fog is not currently limiting visibility.';
   } else {
-    parseFloat(visibility) < limit ? description = 'Visibility is being affected': description = 'Visibility is Normal';
+    parseFloat(visibility) < limit ? description = 'Reduced visibility may affect driving and distant views.' : description = 'Visibility should be good for travel and outdoor plans.';
   }
   if (type === 'tomorrow' ) {
-    parseFloat(visibility) < limit ? description = `Visibility will be affected Tomorrow` : description = 'Visibility will be Normal';
+    parseFloat(visibility) < limit ? description = `Visibility may be reduced ${type === 'tomorrow' ? 'tomorrow' : 'that day'}; allow extra travel time.` : description = 'Visibility should be good for travel.';
   }
   const visibilityIcon = createIcon('wi wi-fog', 'visibility-icon');
   const visibilityCard = createLabeledCard('VISIBILITY', visibilityIcon, `${visibility}${units.visibility}`, '', description);
@@ -152,15 +176,15 @@ function renderUvIndex (uvindex) {
   uvIndicator.style.left = `${percentage}%`;
   let description;
   if (uvindex <= 2) {
-    description = 'Low for the rest of the day';
+    description = 'Low risk for sun exposure. Sunglasses are still useful in bright conditions.';
   } else if (uvindex < 5) {
-    description = 'Moderate, Seek shade during midday hours';
+    description = 'Some protection is sensible around midday; seek shade during longer outdoor periods.';
   } else if (uvindex < 7) {
-    description = 'High, Protection highly recommended';
+    description = 'Protection is recommended: use sunscreen, sunglasses, and shade around midday.';
   } else if (uvindex < 10) {
-    description = 'Very High, Take extra precautions'
+    description = 'Very high exposure risk. Limit direct sun and reapply sunscreen regularly.'
   } else {
-    description = 'Extreme, Unprotected skin can burn in minutes';
+    description = 'Extreme exposure risk. Avoid direct sun where possible and protect exposed skin.';
   }
 
   const uvIcon = createIcon('wi wi-day-sunny');
@@ -182,13 +206,13 @@ function renderPrecip(precip = 0, next24HourPrecip, preciptype, type) {
   let description;
 
   if (precip > 0 && type === 'today') {
-    description = `Currently ${precip} mm of ${preciptype} is falling.`
+    description = `Currently ${precip} mm of ${preciptype} is falling; allow extra time and use rain protection.`
   } else if (next24HourPrecip > 0) {
     let intensity;
     next24HourPrecip < 10 ? intensity = 'Light' : intensity = 'Heavy';
-    description = `${intensity} ${preciptype} expected. Total of ${next24HourPrecip} mm in the next 24 hours`;
+    description = `${intensity} ${preciptype} is possible in the next 24 hours, with about ${next24HourPrecip} mm expected.`;
   } else {
-    description = `No ${preciptype} is expected in next 24h`
+    description = `No meaningful ${preciptype} is expected in the next 24 hours, so outdoor plans look lower-risk.`
   }
   let icon = 'rain';
   if (preciptype && preciptype[0] === 'snow') icon = 'snow';
@@ -323,7 +347,13 @@ function renderDay (type, current, today = null, tomorrow)  {
   main.replaceChildren();
   main.classList.remove('days-view');
   const temp = current.temp;
-  const condition = today.description;
+  const condition = createHelpfulSummary(
+    today.description || today.conditions,
+    today.precipprob || 0,
+    current.windspeed || today.windspeed || 0,
+    today.windgust || 0,
+    type
+  );
   const low = today.tempmin;
   const high = today.tempmax;
   const feels = current.feelslike;

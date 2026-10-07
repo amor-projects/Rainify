@@ -16,7 +16,7 @@ function applyFallbackLocation() {
 const successLocation = async (position) => {
   const coords = position.coords;
   try {
-    if (coords && coords.longitude && coords.latitude) {
+    if (coords && Number.isFinite(coords.longitude) && Number.isFinite(coords.latitude)) {
       const LOCALITY_URL = `/api/get_locality?longitude=${coords.longitude}&latitude=${coords.latitude}`;
       const response = await fetch(LOCALITY_URL);
       if (!response.ok) {

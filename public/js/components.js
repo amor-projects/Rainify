@@ -44,7 +44,7 @@ function createAnHour (hour) {
   const precip = `${inchTomm(hour.precip)} mm`;
   let windspeed = hour.windspeed;
   const conditions = hour.conditions;
-  if (units.temp === 'Km/h') {
+  if (units.speed === 'Km/h') {
     windspeed = MiToKm(windspeed);
   }
   const preciptype = hour.preciptype !== null ? hour.preciptype[0] : 'rain';
@@ -94,7 +94,7 @@ function createSearchSuggestionButton(feat) {
 }
 function createSearchSuggestionBox(features) {
   const featuresDom = [];
-  for (const feat of features) {
+  for (const feat of features || []) {
     const searchSuggestionLine = createSearchSuggestionButton(feat);
     featuresDom.push(searchSuggestionLine);
   }
@@ -114,7 +114,7 @@ function renderRootSkeleton() {
     </div>
 
     <div id="search" class="search flex-column">
-        <div class="skeleton-loading sk-text" style="min-height: 2.5rem">
+        <div class="skeleton-loading sk-text">
         </div>
     </div>
 
@@ -127,9 +127,6 @@ function renderRootSkeleton() {
         <div class="skeleton-loading sk-icon"></div>
     </div>
 
-    <div id="profile" class="profile-pic">
-        <div class="skeleton-loading sk-circle"></div>
-    </div>
   `;
 
   naveTabs.innerHTML = `

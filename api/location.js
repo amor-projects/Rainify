@@ -5,9 +5,9 @@ async function getLocation(coords) {
   if (!BDC_API_KEY) {
     return {
       ok: false,
-      city: 'Multan',
-      locality: 'Multan',
-      countryName: 'Pakistan'
+      city: null,
+      locality: null,
+      countryName: null
     }
   }
   const location = {ok: false, name: null, countryName: null};

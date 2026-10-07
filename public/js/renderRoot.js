@@ -1,7 +1,7 @@
 import { createButton, createContainer, createElement, createIcon, createSearchSuggestionBox} from "./components.js";
 import { renderDay} from "./renderDay.js";
 import { renderNext12Days } from "./renderNext12Days.js";
-import { currentLocation, weather, getSearchSuggestions, theme, units, currentTab} from "./utils.js";
+import { currentLocation, weather, getSearchSuggestions, theme, units, currentTab, getPinnedLocations, togglePinnedLocation} from "./utils.js";
 import {fetchWeather} from "./main.js";
 
 const body = document.querySelector('body');
@@ -53,12 +53,23 @@ function renderLocation(currentLocation){
   const parent = document.querySelector('#location-container');
   const locationString = `${currentLocation.locality}`;
   const locationElem = createElement(locationString, 'large bold');
+  const pinButton = document.createElement('button');
+  pinButton.type = 'button';
+  pinButton.className = 'pin-location btn';
+  pinButton.setAttribute('aria-label', 'Pin this location');
+  const isPinned = getPinnedLocations().some(location => location.toLowerCase() === locationString.toLowerCase());
+  pinButton.textContent = isPinned ? '★' : '☆';
+  pinButton.title = isPinned ? 'Unpin location' : 'Pin location';
+  pinButton.addEventListener('click', () => {
+    togglePinnedLocation(locationString);
+    renderLocation(currentLocation);
+  });
   if (!parent) {
-    const locationContainer = createContainer('location-container', 'flex-row', locationElem, locationIcon);
+    const locationContainer = createContainer('location-container', 'flex-row', locationElem, pinButton);
     header.appendChild(locationContainer);
   } else {
     parent.replaceChildren();
-    parent.append(locationElem);
+    parent.append(locationElem, pinButton);
   }
 }
 
@@ -92,6 +103,9 @@ function renderSearchBar(){
     const search = document.querySelector('.search-input');
     const value = search.value;
     if (value && value !== currentLocation.locality) {
+      clearTimeout(_suggestionTimer);
+      suggestionController?.abort();
+      suggestionRequestId += 1;
       searchBox.replaceChildren();
       currentLocation.locality = value;
       currentLocation.countryName = "";
@@ -111,21 +125,32 @@ function renderSearchBar(){
   });
 
   let _suggestionTimer = null;
+  let suggestionController = null;
+  let suggestionRequestId = 0;
   searchInput.addEventListener('input', (event) => {
     clearTimeout(_suggestionTimer);
+    suggestionController?.abort();
+    const requestId = ++suggestionRequestId;
     const value = event.target.value;
     if (!value) {
       searchBox.replaceChildren();
       return;
     }
     _suggestionTimer = setTimeout(() => {
-      getSearchSuggestions(value)
-        .then((suggestions) => renderSearchSuggestionBox(suggestions))
+      suggestionController = new AbortController();
+      getSearchSuggestions(value, suggestionController.signal)
+        .then((suggestions) => {
+          if (requestId === suggestionRequestId && searchInput.value === value) {
+            renderSearchSuggestionBox(suggestions);
+          }
+        })
         .catch((error) => {
-          renderSearchSuggestionBox(['Nothing Here']);
-          console.error(error.message);
+          if (error.name !== 'AbortError' && requestId === suggestionRequestId) {
+            renderSearchSuggestionBox(['Nothing Here']);
+            console.error(error.message);
+          }
         });
-    }, 300);
+    }, 140);
   });
   const searchBar = createContainer('search-bar', 'search-bar flex-row', searchInput, searchBtn);
   if (!parent) {
@@ -141,10 +166,12 @@ function renderToggle(theme){
   
   const lightBtn = document.createElement('button');
   lightBtn.type = 'button';
+  lightBtn.id = 'light-toggle';
   const sunIcon = createIcon('wi wi-day-sunny', 'light-toggle');
   lightBtn.appendChild(sunIcon);
   const darkBtn = document.createElement('button');
   darkBtn.type = 'button';
+  darkBtn.id = 'dark-toggle';
   const moonIcon = createIcon('wi wi-night-clear', 'dark-toggle');
   darkBtn.appendChild(moonIcon);
   darkBtn.className = 'toggle btn';
@@ -157,12 +184,16 @@ function renderToggle(theme){
   } 
   lightBtn.addEventListener('click', () => {
     body.classList.remove('dark-theme');
+    body.classList.add('light-theme');
     theme.mode = 'light';
+    localStorage.setItem('rainify:theme', 'light');
     if (!lightBtn.classList.contains('active-toggle')) lightBtn.classList.add('active-toggle');
     darkBtn.classList.remove('active-toggle');
   })
   darkBtn.addEventListener('click', () => {
     theme.mode = 'dark';
+    body.classList.remove('light-theme');
+    localStorage.setItem('rainify:theme', 'dark');
     if (!body.classList.contains('dark-theme')) body.classList.add('dark-theme');
     if (!darkBtn.classList.contains('active-toggle')) darkBtn.classList.add('active-toggle');
     lightBtn.classList.remove('active-toggle')
@@ -215,21 +246,44 @@ function renderUnitToggle () {
     parent.append(cBtn, fBtn);
   }
 }
+
+function renderPinnedLocations() {
+  const existing = document.getElementById('pinned-locations');
+  if (existing) existing.remove();
+  const pinned = getPinnedLocations();
+  if (!pinned.length) return;
+
+  const select = document.createElement('select');
+  select.id = 'pinned-locations';
+  select.className = 'btn pinned-locations';
+  select.setAttribute('aria-label', 'Pinned locations');
+  const placeholder = document.createElement('option');
+  placeholder.textContent = 'Pinned';
+  placeholder.value = '';
+  select.appendChild(placeholder);
+  pinned.forEach(location => {
+    const option = document.createElement('option');
+    option.value = location;
+    option.textContent = location;
+    select.appendChild(option);
+  });
+  select.addEventListener('change', () => {
+    if (!select.value) return;
+    currentLocation.locality = select.value;
+    fetchWeather(select.value);
+    select.value = '';
+  });
+  header.appendChild(select);
+}
+
 function renderHeader(currentLocation){
   // Other Stuff like trace me button
   renderLocation(currentLocation);
   renderSearchBar();
   renderToggle(theme);
   renderUnitToggle();
-  const xProfile = document.querySelector('#profile');
-  const img = document.createElement('img');
-    img.src = '../assets/tanjiro-kamado-red-48.png';
-    const profile = createContainer('profile', 'profile-pic', img);
-    profile.addEventListener('click', () => {
-      window.location.href = 'https://github.com/ZephyrAmmor';
-  })
-  if (xProfile) xProfile.remove();
-  header.append(profile);
+  renderPinnedLocations();
+  document.querySelector('#profile')?.remove();
 }
 
 function renderRoot(weather) {
