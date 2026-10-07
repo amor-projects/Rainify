@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Rainify</title>
+  <desc id="desc">A blue cloud with a raindrop</desc>
+  <defs>
+    <linearGradient id="sky" x1="32" y1="24" x2="224" y2="232" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#64b5ff"/>
+      <stop offset="1" stop-color="#0a84ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="64" fill="#e5f2ff"/>
+  <path fill="url(#sky)" d="M67 169c-22 0-40-18-40-40 0-22 18-40 40-40 8-27 33-46 63-46 35 0 63 28 63 63 24 2 43 22 43 47 0 26-21 47-47 47H67Z"/>
+  <path fill="#fff" d="M128 112c-5 12-24 29-24 46a24 24 0 0 0 48 0c0-17-19-34-24-46Z"/>
+</svg>

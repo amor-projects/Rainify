@@ -1,0 +1,17 @@
+{
+  "name": "Rainify Weather",
+  "short_name": "Rainify",
+  "description": "A clear, calm view of current conditions and weather forecasts.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0a84ff",
+  "icons": [
+    {
+      "src": "/assets/brand-mark.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
